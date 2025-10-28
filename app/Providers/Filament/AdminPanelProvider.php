@@ -37,6 +37,9 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
+                // \App\Filament\Widgets\ArsipChart::class,
+                // \App\Filament\Widgets\ArsipStatsOverview::class,
+                // \App\Filament\Widgets\RecentArsipTable::class,
                 Widgets\AccountWidget::class,
                 Widgets\FilamentInfoWidget::class,
             ])
