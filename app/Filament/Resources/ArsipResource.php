@@ -88,7 +88,22 @@ class ArsipResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->filters([
+                Tables\Filters\SelectFilter::make('kategori_id')
+                    ->label('Filter By Kategori')
+                    ->options(Kategori::pluck('nama', 'id')),
+                Tables\Filters\Filter::make('tanggal_upload')
+                    ->form([
+                        Forms\Components\DatePicker::make('form')->label('Dari tanggal'),
+                        Forms\Components\DatePicker::make('util')->label('Sampai tanggal'),
+                    ])
+                   ->query(function ($query, array $data) {
+                    return $query
+                        ->when($data['form'], fn (Builder $query, $date) => $query->whereDate('created_at', '>=', $date))
+                        ->when($data['util'], fn (Builder $query, $date) => $query->whereDate('created_at', '<=', $date));
+                }),
+            ])->defaultSort('created_at', 'desc');
     }
 
     public static function getRelations(): array
