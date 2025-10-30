@@ -36,6 +36,11 @@ class ArsipResource extends Resource
                     ->label('Judul Arsip')
                     ->required()
                     ->maxLength(255),
+                Forms\Components\DatePicker::make('tanggal_arsip')
+                    ->label('Tanggal Arsip')
+                    ->required()
+                    ->default(now())
+                    ->maxDate(now()),
                 Forms\Components\Textarea::make('deskripsi')
                     ->label('Deskripsi')
                     ->rows(3),
@@ -51,13 +56,14 @@ class ArsipResource extends Resource
                 //     ->downloadable()
                 //     ->required(),
                 FileUpload::make('file_path')
-                    ->label('File Arsip (PDF/DOC)')
+                    ->label('File Arsip')
+                    ->helperText('Upload file apapun (DOC, PDF, XLS, JPG, ZIP, dll)')
                     ->directory('arsip')
                     ->disk('public')
                     ->required()
                     ->downloadable()
                     ->openable()
-                    ->acceptedFileTypes(['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'])
+                    ->maxSize(50 * 1024)
                     ->getUploadedFileNameForStorageUsing(
                         function (\Livewire\Features\SupportFileUploads\TemporaryUploadedFile $file): string {
                             $fileName = $file->getClientOriginalName();
