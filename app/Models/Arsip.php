@@ -34,4 +34,15 @@ class Arsip extends Model
         }
         return null;
     }
+
+    public function getOriginalFileNameAttribute()
+    {
+        if ($this->file_path) {
+            $fileName = basename($this->file_path);
+            // Remove timestamp and hash from filename
+            preg_match('/\d{4}-\d{2}-\d{2}-\d{6}_[a-f0-9]{32}_(.+)$/', $fileName, $matches);
+            return $matches[1] ?? $fileName;
+        }
+        return null;
+    }
 }

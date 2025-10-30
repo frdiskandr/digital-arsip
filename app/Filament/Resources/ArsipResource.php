@@ -57,7 +57,18 @@ class ArsipResource extends Resource
                     ->required()
                     ->downloadable()
                     ->openable()
-                    ->preserveFilenames()
+                    ->acceptedFileTypes(['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'])
+                    ->getUploadedFileNameForStorageUsing(
+                        function (\Livewire\Features\SupportFileUploads\TemporaryUploadedFile $file): string {
+                            $fileName = $file->getClientOriginalName();
+                            $extension = $file->getClientOriginalExtension();
+                            $nameWithoutExtension = str_replace('.' . $extension, '', $fileName);
+
+                            return date('Y-m-d-His') . '_' .
+                                md5($nameWithoutExtension . time()) . '_' .
+                                str_replace([' ', '#', '&', '{', '}', '<', '>', '*', '?', '/', '\\', '$', '!', '\'', '"', ':', '@', '+', '`', '|', '='], '-', $fileName);
+                        }
+                    )
             ]);
     }
 
@@ -69,12 +80,10 @@ class ArsipResource extends Resource
                 Tables\Columns\TextColumn::make('kategori.nama')->label('Kategori')->sortable(),
                 Tables\Columns\TextColumn::make('user.name')->label('Pengunggah'),
                 Tables\Columns\TextColumn::make('created_at')->label('Tanggal Upload')->dateTime('d M Y H:i'),
-                Tables\Columns\TextColumn::make('file_path')
-                    ->label('File')
-                    ->formatStateUsing(function ($state) {
-                        $fileName = basename($state);
-                        return $fileName;
-                    }),
+                Tables\Columns\TextColumn::make('original_file_name')
+                    ->label('Nama File')
+                    ->searchable()
+                    ->sortable(),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('kategori_id')
@@ -82,7 +91,7 @@ class ArsipResource extends Resource
                     ->options(Kategori::pluck('nama', 'id')),
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
+                // Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
                 Tables\Actions\Action::make('download')
