@@ -22,11 +22,21 @@ class ArsipResource extends Resource
 {
     protected static ?string $model = Arsip::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+   protected static ?string $navigationIcon = 'heroicon-o-folder';
     protected static ?string $navigationLabel = 'Arsip';
     protected static ?string $pluralModelLabel = 'Arsip';
     protected static ?string $modelLabel = 'Arsip';
-    protected static ?string $navigationGroup = 'Manajemen Arsip';
+    // protected static ?string $navigationGroup = 'Manajemen Arsip';
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return static::getModel()::count() > 10 ? 'success' : 'primary';
+    }
 
     public static function form(Form $form): Form
     {

@@ -17,8 +17,8 @@ class Profile extends BaseEditProfile
     protected static ?string $navigationIcon = 'heroicon-o-user';
     protected static ?int $navigationSort = 100;
     protected static ?string $navigationGroup = 'Pengaturan';
-    
-    public function form(Form $form): Form 
+
+    public function form(Form $form): Form
     {
         return $form
             ->schema([
@@ -34,7 +34,7 @@ class Profile extends BaseEditProfile
                                     ->maxLength(255)
                                     ->placeholder('Masukkan nama lengkap')
                                     ->prefixIcon('heroicon-m-user'),
-                                    
+
                                 TextInput::make('email')
                                     ->label('Email')
                                     ->email()
@@ -56,8 +56,8 @@ class Profile extends BaseEditProfile
                                     ->rule('min:8')
                                     ->placeholder('Minimal 8 karakter')
                                     ->prefixIcon('heroicon-m-lock-closed')
-                                    ->dehydrated(fn ($state) => filled($state))
-                                    ->dehydrateStateUsing(fn ($state) => Hash::make($state))
+                                    ->dehydrated(fn($state) => filled($state))
+                                    ->dehydrateStateUsing(fn($state) => Hash::make($state))
                                     ->live(debounce: 500)
                                     ->same('passwordConfirmation'),
 
@@ -68,7 +68,7 @@ class Profile extends BaseEditProfile
                                     ->placeholder('Ketik ulang password baru')
                                     ->prefixIcon('heroicon-m-lock-closed')
                                     ->dehydrated(false)
-                                    ->required(fn ($get) => filled($get('password'))),
+                                    ->required(fn($get) => filled($get('password'))),
                             ])
                     ])
                     ->columns(1),

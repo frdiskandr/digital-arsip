@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return redirect('/admin');
+    return view('welcome');
 });
 
 // Backwards-compatible alias for Filament profile auth route.

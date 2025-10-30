@@ -16,12 +16,22 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class KategoriResource extends Resource
 {
     protected static ?string $model = Kategori::class;
+ protected static ?string $navigationIcon = 'heroicon-o-tag';
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $navigationLabel = 'Kategori Arsip';
     protected static ?string $pluralModelLabel = 'Kategori Arsip';
     protected static ?string $modelLabel = 'Kategori Arsip';
-    protected static ?string $navigationGroup = 'Manajemen Arsip';
+    // protected static ?string $navigationGroup = 'Manajemen Arsip';
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+
+    public static function getNavigationBadgeColor(): string
+    {
+        return 'warning';
+    }
 
     public static function form(Form $form): Form
     {
