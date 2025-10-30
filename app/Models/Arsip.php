@@ -26,4 +26,12 @@ class Arsip extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function getFileUrlAttribute()
+    {
+        if ($this->file_path) {
+            return url('storage/' . $this->file_path);
+        }
+        return null;
+    }
 }

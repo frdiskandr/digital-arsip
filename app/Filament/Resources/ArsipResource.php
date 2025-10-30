@@ -69,10 +69,12 @@ class ArsipResource extends Resource
                 Tables\Columns\TextColumn::make('kategori.nama')->label('Kategori')->sortable(),
                 Tables\Columns\TextColumn::make('user.name')->label('Pengunggah'),
                 Tables\Columns\TextColumn::make('created_at')->label('Tanggal Upload')->dateTime('d M Y H:i'),
-                Tables\Columns\IconColumn::make('file_path')
+                Tables\Columns\TextColumn::make('file_path')
                     ->label('File')
-                    ->boolean()
-                    ->getStateUsing(fn($record) => Storage::exists($record->file_path)),
+                    ->formatStateUsing(function ($state) {
+                        $fileName = basename($state);
+                        return $fileName;
+                    }),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('kategori_id')
@@ -83,6 +85,18 @@ class ArsipResource extends Resource
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
+                Tables\Actions\Action::make('download')
+                    ->label('Download')
+                    ->icon('heroicon-o-arrow-down-tray')
+                    ->url(fn(Arsip $record) => $record->file_url)
+                    ->openUrlInNewTab()
+                    ->visible(fn(Arsip $record) => $record->file_path && Storage::disk('public')->exists($record->file_path)),
+                Tables\Actions\Action::make('view')
+                    ->label('Lihat')
+                    ->icon('heroicon-o-eye')
+                    ->url(fn(Arsip $record) => $record->file_url)
+                    ->openUrlInNewTab()
+                    ->visible(fn(Arsip $record) => $record->file_path && Storage::disk('public')->exists($record->file_path)),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -98,11 +112,11 @@ class ArsipResource extends Resource
                         Forms\Components\DatePicker::make('form')->label('Dari tanggal'),
                         Forms\Components\DatePicker::make('util')->label('Sampai tanggal'),
                     ])
-                   ->query(function ($query, array $data) {
-                    return $query
-                        ->when($data['form'], fn (Builder $query, $date) => $query->whereDate('created_at', '>=', $date))
-                        ->when($data['util'], fn (Builder $query, $date) => $query->whereDate('created_at', '<=', $date));
-                }),
+                    ->query(function ($query, array $data) {
+                        return $query
+                            ->when($data['form'], fn(Builder $query, $date) => $query->whereDate('created_at', '>=', $date))
+                            ->when($data['util'], fn(Builder $query, $date) => $query->whereDate('created_at', '<=', $date));
+                    }),
             ])->defaultSort('created_at', 'desc');
     }
 
