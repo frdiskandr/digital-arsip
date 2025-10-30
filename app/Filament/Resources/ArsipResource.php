@@ -36,7 +36,7 @@ class ArsipResource extends Resource
                     ->label('Judul Arsip')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\DatePicker::make('tanggal_arsip')
+                Forms\Components\DatePicker::make('created_at')
                     ->label('Tanggal Arsip')
                     ->required()
                     ->default(now())
@@ -51,7 +51,7 @@ class ArsipResource extends Resource
                 // Forms\Components\FileUpload::make('file_path')
                 //     ->label('File Arsip (PDF/DOC)')
                 //     ->directory('arsip')
-                //     ->preserveFilenames()
+                //   ->sortable()  ->preserveFilenames()
                 //     ->openable()
                 //     ->downloadable()
                 //     ->required(),
@@ -63,7 +63,7 @@ class ArsipResource extends Resource
                     ->required()
                     ->downloadable()
                     ->openable()
-                    ->maxSize(50 * 1024)
+                    ->maxSize(500 * 1024)
                     ->getUploadedFileNameForStorageUsing(
                         function (\Livewire\Features\SupportFileUploads\TemporaryUploadedFile $file): string {
                             $fileName = $file->getClientOriginalName();
@@ -85,11 +85,12 @@ class ArsipResource extends Resource
                 Tables\Columns\TextColumn::make('judul')->label('Judul')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('kategori.nama')->label('Kategori')->sortable(),
                 Tables\Columns\TextColumn::make('user.name')->label('Pengunggah'),
-                Tables\Columns\TextColumn::make('created_at')->label('Tanggal Upload')->dateTime('d M Y H:i'),
+                // Tables\Columns\TextColumn::make('tanggal_arsip')->label('Tanggal Arsip')->date('d M Y')->sortable(),
+                Tables\Columns\TextColumn::make('created_at')->label('Tanggal Upload')->dateTime('d M Y H:i')->sortable(),
                 Tables\Columns\TextColumn::make('original_file_name')
-                    ->label('Nama File')
-                    ->searchable()
-                    ->sortable(),
+                    ->label('Nama File'),
+                    // ->searchable()
+                    // ->sortable(),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('kategori_id')
