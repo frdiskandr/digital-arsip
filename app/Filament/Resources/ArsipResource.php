@@ -88,9 +88,9 @@ class ArsipResource extends Resource
                 // Tables\Columns\TextColumn::make('tanggal_arsip')->label('Tanggal Arsip')->date('d M Y')->sortable(),
                 Tables\Columns\TextColumn::make('created_at')->label('Tanggal Upload')->dateTime('d M Y H:i')->sortable(),
                 Tables\Columns\TextColumn::make('original_file_name')
-                    ->label('Nama File'),
-                    // ->searchable()
-                    // ->sortable(),
+                    ->label('Nama File')
+                    ->searchable()
+                    ->sortable(),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('kategori_id')

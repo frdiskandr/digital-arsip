@@ -11,16 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // Alter existing `arsips` table to add tanggal_arsip and original_file_name.
         Schema::table('arsips', function (Blueprint $table) {
-            $table->id();
-            $table->string('judul');
-            $table->text('deskripsi')->nullable();
-            $table->string('file_path');
-            $table->foreignId('kategori_id')->constrained()->onDelete('cascade');
-            // $table->date('tanggal_arsip')->after('deskripsi')->nullable();
-            // $table->string('original_file_name');
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->timestamps();
+            if (!Schema::hasColumn('arsips', 'tanggal_arsip')) {
+                $table->date('tanggal_arsip')->after('deskripsi')->nullable();
+            }
+            if (!Schema::hasColumn('arsips', 'original_file_name')) {
+                $table->string('original_file_name')->after('file_path')->nullable();
+            }
         });
     }
 
@@ -30,7 +28,12 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('arsips', function (Blueprint $table) {
-            Schema::dropIfExists('arsips');
+            if (Schema::hasColumn('arsips', 'original_file_name')) {
+                $table->dropColumn('original_file_name');
+            }
+            if (Schema::hasColumn('arsips', 'tanggal_arsip')) {
+                $table->dropColumn('tanggal_arsip');
+            }
         });
     }
 };
