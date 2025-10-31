@@ -25,7 +25,8 @@ class AppServiceProvider extends ServiceProvider
         Schema::defaultStringLength(191);
         FilamentView::registerRenderHook(
             'panels::head.end',
-            fn (): HtmlString => new HtmlString('<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>'),
+            fn (): HtmlString => new HtmlString('<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+            '),
         );
     }
 }
