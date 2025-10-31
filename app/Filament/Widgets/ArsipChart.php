@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 
 class ArsipChart extends ChartWidget
 {
-    protected static ?string $heading = 'Chart';
+    protected static ?string $heading = 'Jumlah Arsip per Bulan';
 
     protected function getData(): array
     {
