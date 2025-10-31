@@ -1,67 +1,102 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Digital Arsip
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+![Website Screenshot](public/website.png)
 
-## About Laravel
+## Tentang Proyek
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Digital Arsip adalah aplikasi web yang dibangun dengan Laravel 10 untuk manajemen arsip digital modern. Aplikasi ini menggunakan Filament 3 sebagai admin panel, yang menyediakan antarmuka yang kaya dan reaktif untuk mengelola arsip. Pengguna dapat mengunggah, mengkategorikan, dan mengelola file digital dengan mudah. Aplikasi ini juga dilengkapi dengan kontrol akses berbasis peran (role-based access control) yang didukung oleh `bezhansalleh/filament-shield`.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Frontend aplikasi ini dibangun menggunakan Vite dengan Tailwind CSS untuk styling.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Fitur Utama
 
-## Learning Laravel
+*   **Manajemen Arsip:** Unggah, lihat, edit, dan hapus arsip digital.
+*   **Kategorisasi:** Kelola arsip dengan mengelompokkannya ke dalam kategori.
+*   **Pencarian Cepat:** Temukan arsip dengan cepat melalui fitur pencarian.
+*   **Manajemen Pengguna:** Kelola pengguna dan peran (roles).
+*   **Kontrol Akses:** Batasi akses ke fitur-fitur tertentu berdasarkan peran pengguna.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Teknologi yang Digunakan
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+*   **Backend:** PHP 8.1, Laravel 10
+*   **Admin Panel:** Filament 3
+*   **Frontend:** Vite, Tailwind CSS
+*   **Database:** MySQL/PostgreSQL (atau database lain yang didukung Laravel)
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Instalasi dan Konfigurasi Lokal
 
-## Laravel Sponsors
+Berikut adalah langkah-langkah untuk menjalankan proyek ini di lingkungan lokal Anda:
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+1.  **Clone Repositori:**
+    ```bash
+    git clone https://github.com/username/digital-arsip.git
+    cd digital-arsip
+    ```
 
-### Premium Partners
+2.  **Install Dependensi:**
+    *   Install dependensi PHP dengan Composer:
+        ```bash
+        composer install
+        ```
+    *   Install dependensi frontend dengan NPM:
+        ```bash
+        npm install
+        ```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+3.  **Konfigurasi Environment:**
+    *   Salin file `.env.example` menjadi `.env`:
+        ```bash
+        cp .env.example .env
+        ```
+    *   Buat kunci aplikasi baru:
+        ```bash
+        php artisan key:generate
+        ```
+    *   Konfigurasikan koneksi database Anda di dalam file `.env` (DB_CONNECTION, DB_HOST, DB_PORT, DB_DATABASE, DB_USERNAME, DB_PASSWORD).
 
-## Contributing
+4.  **Migrasi Database:**
+    *   Jalankan migrasi untuk membuat tabel-tabel yang diperlukan di database:
+        ```bash
+        php artisan migrate
+        ```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+5.  **Symbolic Link untuk Storage:**
+    *   Buat symbolic link agar file yang diunggah dapat diakses dari web:
+        ```bash
+        php artisan storage:link
+        ```
 
-## Code of Conduct
+6.  **Jalankan Aplikasi:**
+    *   Jalankan server development PHP:
+        ```bash
+        php artisan serve
+        ```
+    *   Jalankan server development Vite untuk aset frontend:
+        ```bash
+        npm run dev
+        ```
+    *   Aplikasi sekarang dapat diakses di `http://localhost:8000`.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Manajemen Pengguna dan Peran
 
-## Security Vulnerabilities
+Aplikasi ini menggunakan `bezhansalleh/filament-shield` untuk manajemen peran dan izin.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Membuat Super Admin
 
-## License
+Untuk membuat pengguna dengan peran Super Admin, jalankan perintah Artisan berikut dan ikuti prompt yang muncul:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-# digital-arsip
+```bash
+php artisan shield:super-admin
+```
+
+Setelah itu, Anda dapat login menggunakan email dan password yang telah Anda buat untuk mengakses semua fitur aplikasi.
+
+### Membuat Pengguna Baru
+
+Pengguna baru dapat dibuat melalui antarmuka admin panel oleh Super Admin atau pengguna lain yang memiliki izin.
+
+1.  Login sebagai Super Admin.
+2.  Navigasi ke menu "Users".
+3.  Klik tombol "New User".
+4.  Isi formulir dengan data pengguna baru.
+5.  Anda juga dapat menetapkan peran (role) untuk pengguna tersebut saat membuatnya.
