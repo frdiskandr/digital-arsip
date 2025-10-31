@@ -9,6 +9,9 @@
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700,800&display=swap" rel="stylesheet" />
 
+        <!-- AOS -->
+        <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
         <!-- Scripts -->
         <script src="https://cdn.tailwindcss.com"></script>
         <script>
@@ -60,15 +63,15 @@
 
             <div class="mx-auto max-w-7xl px-6 lg:px-8 pt-16">
                 <div class="mx-auto max-w-2xl py-32 sm:py-48 lg:py-20">
-                    <div class="text-center">
+                    <div class="text-center" data-aos="fade-up">
                         <h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
                             Sistem Manajemen Arsip Digital Modern
                         </h1>
-                        <p class="mt-6 text-lg leading-8 text-gray-600">
+                        <p class="mt-6 text-lg leading-8 text-gray-600" data-aos="fade-up" data-aos-delay="200">
                             Kelola dokumen dan arsip penting Anda dengan lebih efisien. Sistem arsip digital yang aman,
                             terorganisir, dan mudah diakses kapan saja.
                         </p>
-                        <div class="mt-10 flex items-center justify-center gap-x-6">
+                        <div class="mt-10 flex items-center justify-center gap-x-6" data-aos="fade-up" data-aos-delay="400">
                             <a href="{{ route('filament.admin.auth.login') }}"
                                class="rounded-md bg-primary-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600">
                                 Mulai Sekarang
@@ -82,7 +85,7 @@
         <!-- Features Section -->
         <div class="py-24 sm:py-32">
             <div class="mx-auto max-w-7xl px-6 lg:px-8">
-                <div class="mx-auto max-w-2xl lg:text-center">
+                <div class="mx-auto max-w-2xl lg:text-center" data-aos="fade-up">
                     <h2 class="text-base font-semibold leading-7 text-primary-600">Manajemen Lebih Baik</h2>
                     <p class="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
                         Fitur Unggulan Sistem
@@ -93,7 +96,7 @@
                 </div>
                 <div class="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-none">
                     <dl class="grid max-w-xl grid-cols-1 gap-x-8 gap-y-16 lg:max-w-none lg:grid-cols-3">
-                        <div class="flex flex-col">
+                        <div class="flex flex-col" data-aos="fade-up" data-aos-delay="100">
                             <dt class="flex items-center gap-x-3 text-base font-semibold leading-7 text-gray-900">
                                 <svg class="h-5 w-5 flex-none text-primary-600" viewBox="0 0 20 20" fill="currentColor">
                                     <path d="M10 2a.75.75 0 01.75.75v5.59l1.95-2.1a.75.75 0 111.1 1.02l-3.25 3.5a.75.75 0 01-1.1 0L6.2 7.26a.75.75 0 111.1-1.02l1.95 2.1V2.75A.75.75 0 0110 2z"/>
@@ -105,7 +108,7 @@
                                 <p class="flex-auto">Simpan dokumen penting Anda dalam format digital yang aman dan terorganisir.</p>
                             </dd>
                         </div>
-                        <div class="flex flex-col">
+                        <div class="flex flex-col" data-aos="fade-up" data-aos-delay="200">
                             <dt class="flex items-center gap-x-3 text-base font-semibold leading-7 text-gray-900">
                                 <svg class="h-5 w-5 flex-none text-primary-600" viewBox="0 0 20 20" fill="currentColor">
                                     <path d="M8 10a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0z" />
@@ -117,7 +120,7 @@
                                 <p class="flex-auto">Temukan dokumen yang Anda butuhkan dengan cepat menggunakan fitur pencarian canggih.</p>
                             </dd>
                         </div>
-                        <div class="flex flex-col">
+                        <div class="flex flex-col" data-aos="fade-up" data-aos-delay="300">
                             <dt class="flex items-center gap-x-3 text-base font-semibold leading-7 text-gray-900">
                                 <svg class="h-5 w-5 flex-none text-primary-600" viewBox="0 0 20 20" fill="currentColor">
                                     <path fill-rule="evenodd" d="M15.312 11.424a5.5 5.5 0 01-9.201 2.466l-.312-.311h2.433a.75.75 0 000-1.5H3.989a.75.75 0 00-.75.75v4.242a.75.75 0 001.5 0v-2.43l.31.31a7 7 0 0011.712-3.138.75.75 0 00-1.449-.39zm1.23-3.723a.75.75 0 00.219-.53V2.929a.75.75 0 00-1.5 0V5.36l-.31-.31A7 7 0 003.239 8.188a.75.75 0 101.448.389A5.5 5.5 0 0113.89 6.11l.311.31h-2.432a.75.75 0 000 1.5h4.243a.75.75 0 00.53-.219z" clip-rule="evenodd" />
@@ -135,7 +138,7 @@
 
         <!-- CTA Section -->
         <div class="bg-primary-600 py-16 sm:py-24">
-            <div class="mx-auto max-w-7xl px-6 lg:px-8">
+            <div class="mx-auto max-w-7xl px-6 lg:px-8" data-aos="zoom-in">
                 <div class="mx-auto max-w-2xl text-center">
                     <h2 class="text-3xl font-bold tracking-tight text-white sm:text-4xl">
                         Mulai Kelola Arsip Digital Anda
@@ -164,5 +167,13 @@
             </div>
         </footer>
 
+        <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+        <script>
+            AOS.init({
+                duration: 800,
+                easing: 'ease-in-out',
+                once: true
+            });
+        </script>
     </body>
 </html>
