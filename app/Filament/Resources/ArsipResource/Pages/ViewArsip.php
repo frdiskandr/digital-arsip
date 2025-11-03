@@ -10,4 +10,6 @@ class ViewArsip extends ViewRecord
     protected static string $resource = ArsipResource::class;
 
     protected static ?string $title = 'Detail Arsip';
+
+    protected static string $view = 'filament.resources.arsip-resource.pages.view-arsip';
 }

@@ -73,7 +73,7 @@ class ArsipResource extends Resource
                     ->required()
                     ->downloadable()
                     ->openable()
-                    ->maxSize(500 * 1024)
+                    ->maxSize(102400)
                     ->getUploadedFileNameForStorageUsing(
                         function (\Livewire\Features\SupportFileUploads\TemporaryUploadedFile $file): string {
                             $fileName = $file->getClientOriginalName();
@@ -120,8 +120,7 @@ class ArsipResource extends Resource
                 Tables\Actions\Action::make('view')
                     ->label('Lihat')
                     ->icon('heroicon-o-eye')
-                    ->url(fn(Arsip $record) => $record->file_url)
-                    ->openUrlInNewTab()
+                    ->url(fn(Arsip $record) => ArsipResource::getUrl('view', ['record' => $record]))
                     ->visible(fn(Arsip $record) => $record->file_path && Storage::disk('public')->exists($record->file_path)),
             ])
             ->bulkActions([
