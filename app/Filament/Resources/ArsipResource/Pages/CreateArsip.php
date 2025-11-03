@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Auth;
 class CreateArsip extends CreateRecord
 {
     protected static string $resource = ArsipResource::class;
-
     protected function getRedirectUrl(): string
     {
         return $this->getResource()::getUrl('index');

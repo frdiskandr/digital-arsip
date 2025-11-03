@@ -11,6 +11,11 @@ use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class ArsipStatsOverview extends BaseWidget
 {
+    protected int | string | array $columnSpan = 'full';
+
+    protected static ?int $sort = 2;
+
+
     protected function getStats(): array
     {
         return [

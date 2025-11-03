@@ -9,6 +9,14 @@ use Illuminate\Support\Facades\DB;
 class ArsipChart extends ChartWidget
 {
     protected static ?string $heading = 'Jumlah Arsip per Bulan';
+    protected int | string | array $columnSpan = 1;
+    protected static ?int $sort = 2;
+
+    public function getColumnSpan(): array|int|string{
+        return 1;
+    }
+
+
 
     protected function getData(): array
     {
