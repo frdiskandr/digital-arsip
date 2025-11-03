@@ -87,6 +87,8 @@ Untuk membuat pengguna dengan peran Super Admin, jalankan perintah Artisan berik
 
 ```bash
 php artisan shield:super-admin
+
+php artisan shield:generate --panel=admin --all --option=policies_and_permissions -n
 ```
 
 Setelah itu, Anda dapat login menggunakan email dan password yang telah Anda buat untuk mengakses semua fitur aplikasi.
