@@ -11,9 +11,12 @@ class ArsipKategoriChart extends ChartWidget
     protected static ?string $heading = 'Distribusi Arsip per Kategori';
     protected static ?int $sort = 3;
 
-    public function getColumnSpan(): array|int|string
+    public function getColumnSpan(): int | string | array
     {
-        return 1;
+        return [
+            'md' => 2,
+            'lg' => 1,
+        ];
     }
 
 
@@ -25,24 +28,41 @@ class ArsipKategoriChart extends ChartWidget
             ->groupBy('kategori_id')
             ->get();
 
-        $labels = $data->map(function ($item) {
-            return Kategori::find($item->kategori_id)->nama ?? 'Lainnya';
-        });
+        $categoryNames = Kategori::query()
+            ->whereIn('id', $data->pluck('kategori_id')->filter()->unique())
+            ->pluck('nama', 'id');
 
-        $colors = [
-            '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40', '#E7E9ED',
-            '#8D6E63', '#FFD54F', '#66BB6A', '#EF5350', '#AB47BC', '#26A69A', '#FFA726',
-        ];
+        $labels = $data->map(function ($item) use ($categoryNames) {
+            return $categoryNames[$item->kategori_id] ?? 'Lainnya';
+        })->values();
+
+        $values = $data->pluck('total');
+
+        $palette = \collect([
+            '#3B82F6',
+            '#0EA5E9',
+            '#22C55E',
+            '#FACC15',
+            '#F97316',
+            '#EF4444',
+            '#A855F7',
+            '#EC4899',
+            '#14B8A6',
+            '#94A3B8',
+        ])->take($labels->count())->values()->all();
 
         return [
             'datasets' => [
                 [
                     'label' => 'Arsip',
-                    'data' => $data->pluck('total'),
-                    'backgroundColor' => array_slice($colors, 0, count($labels)),
+                    'data' => $values,
+                    'backgroundColor' => $palette,
+                    'borderColor' => array_fill(0, $labels->count(), '#FFFFFF'),
+                    'borderWidth' => 2,
+                    'hoverOffset' => 10,
                 ],
             ],
-            'labels' => $labels,
+            'labels' => $labels->all(),
         ];
     }
 
@@ -51,16 +71,50 @@ class ArsipKategoriChart extends ChartWidget
         return 'doughnut';
     }
 
-    protected function getOptions(): array {
+    protected function getOptions(): array
+    {
         return [
             'responsive' => true,
+            'maintainAspectRatio' => false,
+            'cutout' => '65%',
+            'layout' => [
+                'padding' => [
+                    'top' => 16,
+                    'right' => 16,
+                    'bottom' => 16,
+                    'left' => 16,
+                ],
+            ],
+            'animation' => [
+                'animateRotate' => true,
+                'animateScale' => true,
+            ],
             'plugins' => [
                 'legend' => [
                     'position' => 'right',
+                    'align' => 'center',
+                    'labels' => [
+                        'usePointStyle' => true,
+                        'pointStyle' => 'circle',
+                        'padding' => 16,
+                        'boxWidth' => 12,
+                        'boxHeight' => 12,
+                        'color' => '#1F2937',
+                        'font' => [
+                            'size' => 12,
+                            'weight' => '500',
+                        ],
+                    ],
+                ],
+                'tooltip' => [
+                    'backgroundColor' => '#0F172A',
+                    'titleColor' => '#F8FAFC',
+                    'bodyColor' => '#E2E8F0',
+                    'padding' => 12,
+                    'cornerRadius' => 8,
+                    'displayColors' => false,
                 ],
             ],
-            'cutout' => '60%',
-            'maintainAspectRatio' => false,
         ];
     }
 }

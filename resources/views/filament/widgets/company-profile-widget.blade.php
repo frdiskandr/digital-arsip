@@ -4,8 +4,8 @@
             {{-- Placeholder for company logo --}}
             <img src="https://d1csarkz8obe9u.cloudfront.net/posterpreviews/company-logo-design-template-e089327a5c476ce5c70c74f7359c5898_screen.jpg?ts=1672291305" alt="Company Logo" class="h-16 w-16 rounded-full object-cover">
             <div>
-                <h2 class="text-xl font-bold">Nama Perusahaan Anda</h2>
-                <p class="text-gray-600">Slogan atau Deskripsi Singkat Perusahaan</p>
+                <h2 class="text-xl font-bold">Nama Perusahaan</h2>
+                <p class="text-gray-600">Membangun Era digital Indonesia</p>
             </div>
         </div>
         {{-- <div class="mt-4 text-gray-700">
