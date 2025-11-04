@@ -10,17 +10,17 @@ class DocTypeDistributionChart extends ChartWidget
 {
     protected static ?string $heading = 'Distribusi Tipe Dokumen';
     protected int|string|array $columnSpan = 1;
-    protected static ?int $sort = 5;
+    protected static ?int $sort = 2;
 
     protected function getType(): string
     {
         return 'doughnut';
     }
 
-    protected function getMaxHeight(): string|null
-    {
-        return '300px';
-    }
+    // protected function getMaxHeight(): string|null
+    // {
+    //     return '300px';
+    // }
 
     protected function getData(): array
     {
@@ -71,25 +71,25 @@ class DocTypeDistributionChart extends ChartWidget
             'maintainAspectRatio' => false,
             'events' => ['mousemove','mouseout','click','touchstart','touchmove','touchend'],
             'interaction' => ['mode' => 'index', 'intersect' => false],
-            'plugins' => [
-                'legend' => ['position' => 'right', 'labels' => ['usePointStyle' => true]],
-                'tooltip' => [
-                    'enabled' => true,
-                    'callbacks' => [
-                        'label' => new \Illuminate\Support\Js(<<<'JS'
-                            function(ctx){
-                                const label = ctx.label || '';
-                                const v = ctx.parsed ?? ctx.raw ?? 0;
-                                const data = ctx.dataset?.data || [];
-                                const total = data.reduce((a,b)=>a + (typeof b==='number'? b:0),0);
-                                const pct = total>0 ? ` (${(v*100/total).toFixed(1)}%)` : '';
-                                try { return `${label}: ${new Intl.NumberFormat('id-ID').format(v)} arsip${pct}`; }
-                                catch { return `${label}: ${v} arsip${pct}`; }
-                            }
-                        JS),
-                    ],
-                ],
-            ],
+            // 'plugins' => [
+            //     'legend' => ['position' => 'right', 'labels' => ['usePointStyle' => true]],
+            //     'tooltip' => [
+            //         'enabled' => true,
+            //         'callbacks' => [
+            //             'label' => new \Illuminate\Support\Js(<<<'JS'
+            //                 function(ctx){
+            //                     const label = ctx.label || '';
+            //                     const v = ctx.parsed ?? ctx.raw ?? 0;
+            //                     const data = ctx.dataset?.data || [];
+            //                     const total = data.reduce((a,b)=>a + (typeof b==='number'? b:0),0);
+            //                     const pct = total>0 ? ` (${(v*100/total).toFixed(1)}%)` : '';
+            //                     try { return `${label}: ${new Intl.NumberFormat('id-ID').format(v)} arsip${pct}`; }
+            //                     catch { return `${label}: ${v} arsip${pct}`; }
+            //                 }
+            //             JS),
+            //         ],
+            //     ],
+            // ],
             'cutout' => '60%',
         ];
     }

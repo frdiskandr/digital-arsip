@@ -9,8 +9,7 @@ use Filament\Widgets\ChartWidget;
 class ArsipKategoriChart extends ChartWidget
 {
     protected static ?string $heading = 'Distribusi Arsip per Kategori';
-    protected int | string | array $columnSpan = 1;
-    protected static ?int $sort = 2;
+    protected static ?int $sort = 3;
 
     public function getColumnSpan(): array|int|string
     {
@@ -49,6 +48,19 @@ class ArsipKategoriChart extends ChartWidget
 
     protected function getType(): string
     {
-        return 'pie';
+        return 'doughnut';
+    }
+
+    protected function getOptions(): array {
+        return [
+            'responsive' => true,
+            'plugins' => [
+                'legend' => [
+                    'position' => 'right',
+                ],
+            ],
+            'cutout' => '60%',
+            'maintainAspectRatio' => false,
+        ];
     }
 }

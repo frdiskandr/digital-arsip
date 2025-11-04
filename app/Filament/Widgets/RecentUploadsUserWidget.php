@@ -12,7 +12,7 @@ class RecentUploadsUserWidget extends BaseWidget
 {
     protected static ?string $heading = 'Aktivitas Upload Pengguna';
     protected int | string | array $columnSpan = 'full';
-    protected static ?int $sort = 2;
+    protected static ?int $sort = 10;
 
     public function table(Table $table): Table
     {
