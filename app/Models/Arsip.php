@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 
 class Arsip extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivity;
 
     protected $fillable = [
         'judul',
@@ -19,6 +21,18 @@ class Arsip extends Model
         'original_file_name',
     ];
 
+    /**
+     * Configure activity logging options for Arsip model.
+     */
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->useLogName('arsip')
+            ->logOnly(['judul', 'deskripsi', 'kategori_id'])
+            ->logOnlyDirty()
+            ->dontLogIfAttributesChangedOnly(['updated_at']);
+    }
+
     public function kategori()
     {
         return $this->belongsTo(Kategori::class);
@@ -27,6 +41,11 @@ class Arsip extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function activities()
+    {
+        return $this->morphMany(\Spatie\Activitylog\Models\Activity::class, 'subject');
     }
 
     public function getFileUrlAttribute()

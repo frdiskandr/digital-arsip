@@ -22,7 +22,7 @@ class ArsipResource extends Resource
 {
     protected static ?string $model = Arsip::class;
 
-   protected static ?string $navigationIcon = 'heroicon-o-folder';
+    protected static ?string $navigationIcon = 'heroicon-o-folder';
     protected static ?string $navigationLabel = 'Arsip';
     protected static ?string $pluralModelLabel = 'Arsip';
     protected static ?string $modelLabel = 'Arsip';
@@ -148,7 +148,7 @@ class ArsipResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\ActivitiesRelationManager::class,
         ];
     }
 

@@ -84,5 +84,57 @@
                 Kembali ke Daftar Arsip
             </a>
         </div>
+        @if (class_exists(\Spatie\Activitylog\Models\Activity::class))
+            @php
+                $activities = \Spatie\Activitylog\Models\Activity::where('subject_type', \App\Models\Arsip::class)
+                    ->where('subject_id', $record->id)
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+            @endphp
+
+            <div class="mt-8 bg-white border rounded-lg p-4">
+                <h3 class="text-lg font-semibold mb-4">Riwayat Perubahan</h3>
+                @if ($activities->isEmpty())
+                    <div class="text-gray-500">Belum ada riwayat untuk arsip ini.</div>
+                @else
+                    <div class="space-y-4">
+                        @foreach ($activities as $activity)
+                            <div class="border rounded-lg p-3">
+                                <div class="flex justify-between items-center">
+                                    <div class="text-sm text-gray-700">
+                                        <strong>{{ $activity->description }}</strong>
+                                        @if ($activity->causer)
+                                            oleh <span class="font-medium">{{ $activity->causer->name }}</span>
+                                        @endif
+                                    </div>
+                                    <div class="text-xs text-gray-500">{{ $activity->created_at->diffForHumans() }}</div>
+                                </div>
+                                @if (!empty($activity->properties) && is_array($activity->properties))
+                                    <div class="mt-2 text-sm text-gray-600">
+                                        @php
+                                            $props = $activity->properties;
+                                        @endphp
+                                        @if (isset($props['attributes']) || isset($props['old']))
+                                            <table class="w-full text-sm">
+                                                <tbody>
+                                                @foreach ($props['attributes'] ?? [] as $key => $value)
+                                                    <tr>
+                                                        <td class="font-medium text-gray-700 w-1/3">{{ $key }}</td>
+                                                        <td class="text-gray-600">@if(isset($props['old'][$key]))<del class="text-red-500 mr-2">{{ $props['old'][$key] }}</del>@endif <span>{{ $value }}</span></td>
+                                                    </tr>
+                                                @endforeach
+                                                </tbody>
+                                            </table>
+                                        @else
+                                            <pre class="whitespace-pre-wrap">{{ json_encode($activity->properties, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) }}</pre>
+                                        @endif
+                                    </div>
+                                @endif
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
+            </div>
+        @endif
     </div>
 </x-filament-panels::page>
