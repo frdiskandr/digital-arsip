@@ -92,15 +92,61 @@ class ArsipResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('judul')->label('Judul')->searchable()->sortable(),
-                Tables\Columns\TextColumn::make('kategori.nama')->label('Kategori')->sortable(),
-                Tables\Columns\TextColumn::make('user.name')->label('Pengunggah'),
-                // Tables\Columns\TextColumn::make('tanggal_arsip')->label('Tanggal Arsip')->date('d M Y')->sortable(),
-                Tables\Columns\TextColumn::make('created_at')->label('Tanggal Upload')->dateTime('d M Y H:i')->sortable(),
-                Tables\Columns\TextColumn::make('original_file_name')
-                    ->label('Nama File')
+                // Nama Arsip (dengan deskripsi nama file asli, pemotongan, dan tooltip)
+                Tables\Columns\TextColumn::make('judul')
+                    ->label('Nama')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->limit(50)
+                    ->tooltip(fn(Arsip $record) => $record->judul)
+                    ->description(fn(Arsip $record) => $record->original_file_name, position: 'below')
+                    ->extraHeaderAttributes(['class' => 'w-[38rem]'])
+                    ->extraCellAttributes(['class' => 'max-w-[38rem] truncate']),
+
+                // Jenis Dokumen (ekstensi file)
+                Tables\Columns\BadgeColumn::make('doc_type')
+                    ->label('Jenis')
+                    ->getStateUsing(function (Arsip $record) {
+                        $name = $record->original_file_name ?: $record->file_path;
+                        $ext = $name ? pathinfo($name, PATHINFO_EXTENSION) : null;
+                        return strtoupper($ext ?: 'FILE');
+                    })
+                    ->color(fn($state) => match ($state) {
+                        'PDF' => 'danger',
+                        'XLS', 'XLSX' => 'success',
+                        'DOC', 'DOCX' => 'primary',
+                        default => 'gray',
+                    })
+                    ->extraHeaderAttributes(['class' => 'w-24'])
+                    ->extraCellAttributes(['class' => 'w-24']),
+                    // ->sortable(),
+
+                // Kategori
+                Tables\Columns\BadgeColumn::make('kategori.nama')
+                    ->label('Kategori')
+                    ->colors(['primary'])
+                    ->searchable()
+                    ->sortable()
+                    ->extraHeaderAttributes(['class' => 'w-40'])
+                    ->extraCellAttributes(['class' => 'w-40 truncate']),
+
+                // Pengunggah (nama)
+                Tables\Columns\TextColumn::make('user.name')
+                    ->label('Pengunggah')
+                    ->searchable()
+                    ->sortable()
+                    ->limit(30)
+                    ->tooltip(fn(Arsip $record) => $record->user?->name)
+                    ->extraHeaderAttributes(['class' => 'w-40'])
+                    ->extraCellAttributes(['class' => 'w-40 truncate']),
+
+                // Tanggal Upload
+                Tables\Columns\TextColumn::make('created_at')
+                    ->label('Tanggal')
+                    ->date('d M Y')
+                    ->sortable()
+                    ->extraHeaderAttributes(['class' => 'w-32'])
+                    ->extraCellAttributes(['class' => 'w-32']),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('kategori_id')
@@ -108,20 +154,23 @@ class ArsipResource extends Resource
                     ->options(Kategori::pluck('nama', 'id')),
             ])
             ->actions([
-                // Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
-                Tables\Actions\Action::make('download')
-                    ->label('Download')
-                    ->icon('heroicon-o-arrow-down-tray')
-                    ->url(fn(Arsip $record) => $record->file_url)
-                    ->openUrlInNewTab()
-                    ->visible(fn(Arsip $record) => $record->file_path && Storage::disk('public')->exists($record->file_path)),
-                Tables\Actions\Action::make('view')
-                    ->label('Lihat')
-                    ->icon('heroicon-o-eye')
-                    ->url(fn(Arsip $record) => ArsipResource::getUrl('view', ['record' => $record]))
-                    ->visible(fn(Arsip $record) => $record->file_path && Storage::disk('public')->exists($record->file_path)),
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\Action::make('view')
+                        ->label('Lihat')
+                        ->icon('heroicon-o-eye')
+                        ->url(fn(Arsip $record) => ArsipResource::getUrl('view', ['record' => $record]))
+                        ->visible(fn(Arsip $record) => $record->file_path && Storage::disk('public')->exists($record->file_path)),
+                    Tables\Actions\Action::make('download')
+                        ->label('Download')
+                        ->icon('heroicon-o-arrow-down-tray')
+                        ->url(fn(Arsip $record) => $record->file_url)
+                        ->openUrlInNewTab()
+                        ->visible(fn(Arsip $record) => $record->file_path && Storage::disk('public')->exists($record->file_path)),
+                    Tables\Actions\EditAction::make(),
+                    Tables\Actions\DeleteAction::make(),
+                ])
+                    ->icon('heroicon-m-ellipsis-vertical')
+                    ->label('')
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
