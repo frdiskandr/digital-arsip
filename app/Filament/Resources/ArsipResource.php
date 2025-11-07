@@ -6,6 +6,7 @@ use App\Filament\Resources\ArsipResource\Pages;
 use App\Filament\Resources\ArsipResource\RelationManagers;
 use App\Models\Arsip;
 use App\Models\Kategori;
+use emmanpbarrameda\FilamentTakePictureField\Forms\Components\TakePicture;
 use Filament\Forms;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Form;
@@ -42,6 +43,7 @@ class ArsipResource extends Resource
     {
         return $form
             ->schema([
+
                 Forms\Components\TextInput::make('judul')
                     ->label('Judul Arsip')
                     ->required()

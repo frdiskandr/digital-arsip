@@ -6,7 +6,9 @@
     "license": "MIT",
     "require": {
         "php": "^8.1",
+        "barryvdh/laravel-dompdf": "^3.1",
         "bezhansalleh/filament-shield": "^3.9",
+        "emmanpbarrameda/filament-take-picture-field": "^1.1",
         "filament/filament": "^3.2",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^10.10",
