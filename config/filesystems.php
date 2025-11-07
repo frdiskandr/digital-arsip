@@ -39,7 +39,9 @@ return [
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
-            'url' => env('APP_URL').'/storage',
+            // Use APP_URL if set, otherwise fall back to a relative /storage path so previews
+            // work when accessing the app via an IP/host different from APP_URL (dev setups).
+            'url' => env('APP_URL') ? rtrim(env('APP_URL'), '/') . '/storage' : '/storage',
             'visibility' => 'public',
             'throw' => false,
         ],
