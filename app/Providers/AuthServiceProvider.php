@@ -15,6 +15,9 @@ class AuthServiceProvider extends ServiceProvider
     protected $policies = [
         \App\Models\Arsip::class => \App\Policies\ArsipPolicy::class,
         \App\Models\Kategori::class => \App\Policies\KategoriPolicy::class,
+        \App\Models\Picture::class => \App\Policies\PicturePolicy::class,
+        \App\Models\Setting::class => \App\Policies\SettingPolicy::class,
+        \App\Models\AuditLog::class => \App\Policies\AuditLogPolicy::class,
     ];
 
     /**
