@@ -35,7 +35,7 @@ class DocTypeDistributionChart extends ChartWidget
             ->orderByDesc('total')
             ->get();
 
-        $map = $rows->pluck('total', 'ext')->map(fn ($count) => (int) $count)->all();
+        $map = $rows->pluck('total', 'ext')->map(fn($count) => (int) $count)->all();
 
         if ($rows->whereNull('ext')->sum('total') > 0) {
             $fallback = Arsip::query()
@@ -55,7 +55,7 @@ class DocTypeDistributionChart extends ChartWidget
 
         $labels = collect($map)
             ->keys()
-            ->map(fn ($ext) => strtoupper($ext ?: 'LAINNYA'))
+            ->map(fn($ext) => strtoupper($ext ?: 'LAINNYA'))
             ->values();
 
         $values = collect($map)->values();
