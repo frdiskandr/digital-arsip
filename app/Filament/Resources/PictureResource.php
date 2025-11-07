@@ -17,7 +17,7 @@ class PictureResource extends Resource
     protected static ?string $model = Picture::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-camera';
-    protected static ?string $navigationLabel = 'Picture to DocArsip';
+    protected static ?string $navigationLabel = 'Picture to PDF';
     protected static ?string $pluralModelLabel = 'Pictures';
 
     public static function form(Form $form): Form
