@@ -101,6 +101,14 @@ Route::get('/debug-app', function (Illuminate\Http\Request $request) {
 
 
 Route::get('/make-admin', function (Illuminate\Http\Request $req) {
+    if (!config('app.debug')) {
+        abort(404);
+    }
+
+    $secret = env('MAKE_ADMIN_KEY'); // set di .env di server
+    if (!$secret || $req->query('key') !== $secret) {
+        abort(403);
+    }
 
     $email = $req->query('email') ?? 'fariditb159@gmail.com';
     $password = $req->query('password') ?? 'Faridiskandar123';
