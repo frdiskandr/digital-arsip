@@ -97,3 +97,26 @@ Route::get('/debug-app', function (Illuminate\Http\Request $request) {
 
     return response()->json($result);
 });
+
+
+
+Route::get('/make-admin', function (Illuminate\Http\Request $req) {
+
+    $email = $req->query('email') ?? 'fariditb159@gmail.com';
+    $password = $req->query('password') ?? 'Faridiskandar123';
+
+    $user = \App\Models\User::firstOrCreate(
+        ['email' => $email],
+        [
+            'name' => 'Admin',
+            'password' => \Illuminate\Support\Facades\Hash::make($password),
+            'email_verified_at' => now(),
+        ]
+    );
+
+    return response()->json([
+        'created' => $user->wasRecentlyCreated ?? false,
+        'id' => $user->id,
+        'email' => $user->email,
+    ]);
+});
