@@ -99,6 +99,66 @@ Route::get('/debug-app', function (Illuminate\Http\Request $request) {
 });
 
 
+// Debug a specific storage file (only when APP_DEBUG=true)
+Route::get('/debug-file', function (Illuminate\Http\Request $request) {
+    if (!config('app.debug')) {
+        abort(404);
+    }
+
+    $path = $request->query('path'); // ex: arsip/2025/abc.pdf  (relative to storage/app/public)
+    if (! $path) {
+        return response()->json(['error' => 'missing path query parameter, example: ?path=folder/file.pdf'], 400);
+    }
+
+    // sanitize input: prevent directory traversal
+    $rel = ltrim(str_replace(['..', "\\"], ['', '/'], $path), '/');
+
+    $publicPath = public_path('storage/' . $rel);
+    $storagePath = storage_path('app/public/' . $rel);
+
+    $existsPublic = file_exists($publicPath);
+    $existsStorage = file_exists($storagePath);
+
+    $isStorageLink = is_link(public_path('storage'));
+    $linkTarget = $isStorageLink ? readlink(public_path('storage')) : null;
+
+    $result = [
+        'requested' => $rel,
+        'public_path' => $publicPath,
+        'storage_path' => $storagePath,
+        'exists_public' => $existsPublic,
+        'exists_storage' => $existsStorage,
+        'real_public' => $existsPublic ? realpath($publicPath) : null,
+        'real_storage' => $existsStorage ? realpath($storagePath) : null,
+        'is_public_readable' => $existsPublic ? is_readable($publicPath) : false,
+        'is_storage_readable' => $existsStorage ? is_readable($storagePath) : false,
+        'public_fileperms' => $existsPublic ? sprintf('%o', fileperms($publicPath) & 0x1FF) : null,
+        'storage_fileperms' => $existsStorage ? sprintf('%o', fileperms($storagePath) & 0x1FF) : null,
+        'public_size' => $existsPublic ? filesize($publicPath) : null,
+        'storage_size' => $existsStorage ? filesize($storagePath) : null,
+        'is_storage_link' => $isStorageLink,
+        'storage_link_target' => $linkTarget,
+        'public_mime' => $existsPublic ? @mime_content_type($publicPath) : null,
+    ];
+
+    // Add owner info if posix functions available
+    if ($existsPublic) {
+        $result['public_owner_uid'] = fileowner($publicPath);
+        if (function_exists('posix_getpwuid')) {
+            $result['public_owner'] = posix_getpwuid(fileowner($publicPath));
+        }
+    }
+    if ($existsStorage) {
+        $result['storage_owner_uid'] = fileowner($storagePath);
+        if (function_exists('posix_getpwuid')) {
+            $result['storage_owner'] = posix_getpwuid(fileowner($storagePath));
+        }
+    }
+
+    return response()->json($result);
+});
+
+
 
 Route::get('/make-admin', function (Illuminate\Http\Request $req) {
     if (!config('app.debug')) {
