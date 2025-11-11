@@ -16,6 +16,7 @@ class Arsip extends Model
         'deskripsi',
         'file_path',
         'kategori_id',
+        'subjek_id',
         'user_id',
         'tanggal_arsip',
         'original_file_name',
@@ -36,6 +37,11 @@ class Arsip extends Model
     public function kategori()
     {
         return $this->belongsTo(Kategori::class);
+    }
+
+    public function subjek()
+    {
+        return $this->belongsTo(Subjek::class);
     }
 
     public function user()

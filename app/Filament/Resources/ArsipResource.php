@@ -6,6 +6,7 @@ use App\Filament\Resources\ArsipResource\Pages;
 use App\Filament\Resources\ArsipResource\RelationManagers;
 use App\Models\Arsip;
 use App\Models\Kategori;
+use App\Models\Subjek;
 use emmanpbarrameda\FilamentTakePictureField\Forms\Components\TakePicture;
 use Filament\Forms;
 use Filament\Forms\Components\FileUpload;
@@ -60,6 +61,11 @@ class ArsipResource extends Resource
                     ->label('Kategori')
                     ->options(Kategori::all()->pluck('nama', 'id'))
                     ->required(),
+                Forms\Components\Select::make('subjek_id')
+                    ->label('Subjek')
+                    ->options(Subjek::all()->pluck('nama', 'id'))
+                    ->nullable()
+                    ->helperText('Opsional: pilih subjek untuk arsip ini'),
                 // Forms\Components\FileUpload::make('file_path')
                 //     ->label('File Arsip (PDF/DOC)')
                 //     ->directory('arsip')
@@ -121,7 +127,7 @@ class ArsipResource extends Resource
                     })
                     ->extraHeaderAttributes(['class' => 'w-24'])
                     ->extraCellAttributes(['class' => 'w-24']),
-                    // ->sortable(),
+                // ->sortable(),
 
                 // Kategori
                 Tables\Columns\BadgeColumn::make('kategori.nama')
@@ -131,6 +137,16 @@ class ArsipResource extends Resource
                     ->sortable()
                     ->extraHeaderAttributes(['class' => 'w-40'])
                     ->extraCellAttributes(['class' => 'w-40 truncate']),
+
+                // Subjek (render colored badge using subjek color)
+                Tables\Columns\TextColumn::make('subjek.nama')
+                    ->label('Subjek')
+                    ->searchable()
+                    ->sortable()
+                    ->formatStateUsing(fn($state, Arsip $record) => view('filament.components.subjek-badge', ['name' => $state, 'color' => $record->subjek?->color ?? '#6b7280'])->render())
+                    ->html()
+                    ->extraHeaderAttributes(['class' => 'w-40'])
+                    ->extraCellAttributes(['class' => 'w-40']),
 
                 // Pengunggah (nama)
                 Tables\Columns\TextColumn::make('user.name')
@@ -183,6 +199,9 @@ class ArsipResource extends Resource
                 Tables\Filters\SelectFilter::make('kategori_id')
                     ->label('Filter By Kategori')
                     ->options(Kategori::pluck('nama', 'id')),
+                Tables\Filters\SelectFilter::make('subjek_id')
+                    ->label('Filter By Subjek')
+                    ->options(Subjek::pluck('nama', 'id')),
                 Tables\Filters\Filter::make('tanggal_upload')
                     ->form([
                         Forms\Components\DatePicker::make('form')->label('Dari tanggal'),
