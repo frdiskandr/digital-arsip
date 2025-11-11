@@ -10,13 +10,13 @@ use Spatie\Activitylog\LogOptions;
 class Kategori extends Model
 {
     use HasFactory, LogsActivity;
-    protected $fillable = ['nama', 'deskripsi'];
+    protected $fillable = ['nama', 'deskripsi', 'color'];
 
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
             ->useLogName('kategori')
-            ->logOnly(['nama', 'deskripsi'])
+            ->logOnly(['nama', 'deskripsi', 'color'])
             ->logOnlyDirty();
     }
 

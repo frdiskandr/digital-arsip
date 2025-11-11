@@ -130,13 +130,14 @@ class ArsipResource extends Resource
                 // ->sortable(),
 
                 // Kategori
-                Tables\Columns\BadgeColumn::make('kategori.nama')
+                Tables\Columns\TextColumn::make('kategori.nama')
                     ->label('Kategori')
-                    ->colors(['primary'])
+                    ->formatStateUsing(fn($state, Arsip $record) => view('filament.components.kategori-badge', ['name' => $state, 'color' => $record->kategori?->color ?? '#6b7280'])->render())
+                    ->html()
                     ->searchable()
                     ->sortable()
                     ->extraHeaderAttributes(['class' => 'w-40'])
-                    ->extraCellAttributes(['class' => 'w-40 truncate']),
+                    ->extraCellAttributes(['class' => 'w-40']),
 
                 // Subjek (render colored badge using subjek color)
                 Tables\Columns\TextColumn::make('subjek.nama')

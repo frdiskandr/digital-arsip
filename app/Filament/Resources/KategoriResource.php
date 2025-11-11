@@ -18,10 +18,12 @@ class KategoriResource extends Resource
     protected static ?string $model = Kategori::class;
     protected static ?string $navigationIcon = 'heroicon-o-tag';
 
-    protected static ?string $navigationLabel = 'Kategori Arsip';
-    protected static ?string $pluralModelLabel = 'Kategori Arsip';
-    protected static ?string $modelLabel = 'Kategori Arsip';
-    // protected static ?string $navigationGroup = 'Manajemen Arsip';
+    protected static ?string $navigationLabel = 'kategori Fungsi Arsip';
+    protected static ?string $pluralModelLabel = 'Fungsi Arsip';
+    protected static ?string $modelLabel = 'Fungsi Arsip';
+    protected static ?string $navigationGroup = 'Manajemen Arsip';
+
+
 
     public static function getNavigationBadge(): ?string
     {
@@ -45,6 +47,10 @@ class KategoriResource extends Resource
                     ->label('Deskripsi')
                     ->rows(3)
                     ->nullable(),
+                Forms\Components\ColorPicker::make('color')
+                    ->label('Warna')
+                    ->default('#F97316')
+                    ->required(),
             ]);
     }
 

@@ -20,6 +20,7 @@ class SubjekResource extends Resource
     protected static ?string $navigationLabel = 'Subjek Arsip';
     protected static ?string $pluralModelLabel = 'Subjek Arsip';
     protected static ?string $modelLabel = 'Subjek Arsip';
+     protected static ?string $navigationGroup = 'Manajemen Arsip';
 
     public static function getNavigationBadge(): ?string
     {
