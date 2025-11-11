@@ -120,9 +120,24 @@ class ArsipResource extends Resource
                         return strtoupper($ext ?: 'FILE');
                     })
                     ->color(fn($state) => match ($state) {
+                        // Adobe PDF
                         'PDF' => 'danger',
-                        'XLS', 'XLSX' => 'success',
+
+                        // Microsoft Office
                         'DOC', 'DOCX' => 'primary',
+                        'XLS', 'XLSX' => 'success',
+                        'PPT', 'PPTX' => 'warning',
+
+                        // Images
+                        'JPG', 'JPEG', 'PNG', 'GIF', 'WEBP', 'TIFF' => 'info',
+
+                        // Archives
+                        'ZIP', 'RAR', '7Z' => 'secondary',
+
+                        // Text / others
+                        'TXT', 'MD' => 'gray',
+
+                        // Default fallback
                         default => 'gray',
                     })
                     ->extraHeaderAttributes(['class' => 'w-24'])
