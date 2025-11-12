@@ -196,10 +196,10 @@
                                 @foreach ($props['attributes'] ?? [] as $key =>
                                 $value)
                                 <tr>
-                                    <td class="font-medium text-gray-700 w-1/3">
+                                    <td class="font-medium text-gray-700 dark:text-gray-300 w-1/3">
                                         {{ $key }}
                                     </td>
-                                    <td class="text-gray-600">
+                                    <td class="text-gray-600 dark:text-gray-400">
                                         @if(isset($props['old'][$key]))<del
                                             class="text-red-500 mr-2"
                                             >{{ $props["old"][$key] }}</del
@@ -211,7 +211,7 @@
                         </table>
                         @else
                         <pre
-                            class="whitespace-pre-wrap"
+                            class="whitespace-pre-wrap text-gray-600 dark:text-gray-300"
                             >{{ json_encode($activity->properties, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) }}</pre
                         >
                         @endif
