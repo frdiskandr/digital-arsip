@@ -52,13 +52,21 @@ class TrashArsip extends Page implements HasTable
 
                 TextColumn::make('kategori.nama')
                     ->label('Kategori')
+                    ->formatStateUsing(fn($state, Arsip $record) => view('filament.components.kategori-badge', ['name' => $state, 'color' => $record->kategori?->color ?? '#6b7280'])->render())
+                    ->html()
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->extraHeaderAttributes(['class' => 'max-w-40'])
+                    ->extraCellAttributes(['class' => 'max-w-20 overflow-hidden']),
 
                 TextColumn::make('subjek.nama')
                     ->label('Subjek')
-                    ->searchable()
+                     ->searchable()
                     ->sortable()
+                    ->formatStateUsing(fn($state, Arsip $record) => view('filament.components.subjek-badge', ['name' => $state, 'color' => $record->subjek?->color ?? '#6b7280'])->render())
+                    ->html()
+                    ->extraHeaderAttributes(['class' => 'w-40'])
+                    ->extraCellAttributes(['class' => 'w-40'])
                     ->placeholder('Tanpa subjek'),
 
                 TextColumn::make('user.name')

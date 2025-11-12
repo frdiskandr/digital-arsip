@@ -10,12 +10,14 @@ class DatabaseSeeder extends Seeder
     /**
      * Seed the application's database.
      */
-         public function run(): void
-        {
-            \App\Models\User::factory(10)->create();
-    
-            $this->call([
-                KategoriSeeder::class,
-                ArsipSeeder::class,
-            ]);
-        }}
+    public function run(): void
+    {
+        \App\Models\User::factory(10)->create();
+
+        $this->call([
+            KategoriSeeder::class,
+            SubjekSeeder::class,
+            ArsipSeeder::class,
+        ]);
+    }
+}

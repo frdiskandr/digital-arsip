@@ -108,8 +108,8 @@ class ArsipResource extends Resource
                     ->limit(50)
                     ->tooltip(fn(Arsip $record) => $record->judul)
                     ->description(fn(Arsip $record) => $record->original_file_name, position: 'below')
-                    ->extraHeaderAttributes(['class' => 'w-[38rem]'])
-                    ->extraCellAttributes(['class' => 'max-w-[38rem] truncate']),
+                    ->extraHeaderAttributes(['class' => 'w-[28rem]'])
+                    ->extraCellAttributes(['class' => 'max-w-[28rem] truncate']),
 
                 // Jenis Dokumen (ekstensi file)
                 Tables\Columns\BadgeColumn::make('doc_type')
@@ -151,8 +151,8 @@ class ArsipResource extends Resource
                     ->html()
                     ->searchable()
                     ->sortable()
-                    ->extraHeaderAttributes(['class' => 'w-40'])
-                    ->extraCellAttributes(['class' => 'w-40']),
+                    ->extraHeaderAttributes(['class' => 'max-w-40 '])
+                    ->extraCellAttributes(['class' => 'max-w-40 ']),
 
                 // Subjek (render colored badge using subjek color)
                 Tables\Columns\TextColumn::make('subjek.nama')
