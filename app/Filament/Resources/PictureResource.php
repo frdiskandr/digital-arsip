@@ -25,73 +25,57 @@ class PictureResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Card::make()->schema([
-                    Forms\Components\Grid::make([
-                        // 1 column by default (mobile), 2 columns on small screens and up
-                        'default' => 1,
-                        'sm' => 2,
-                    ])->schema([
-                        // Photo area (left column)
-                        Forms\Components\Repeater::make('photos')
-                            ->label('Foto')
+                Forms\Components\Grid::make()
+                    ->columns(3)
+                    ->schema([
+                        // Main column for photo repeater
+                        Forms\Components\Section::make('Ambil Foto')
+                            ->columnSpan(2)
                             ->schema([
-                                TakePicture::make('path')
+                                Forms\Components\Repeater::make('photos')
                                     ->label('Foto')
-                                    ->directory('arsip/foto')
-                                    ->disk('public')
-                                    ->required(),
-                            ])
-                            ->columns(1)
-                            ->minItems(1)
-                            ->createItemButtonLabel('Tambah Foto')
-                            ->columnSpan([
-                                'default' => 'full', // on mobile the photo area should be full width
-                                'sm' => 1, // on small+ screens occupy the left column
+                                    ->schema([
+                                        TakePicture::make('path')
+                                            ->label('Ambil Gambar')
+                                            ->directory('arsip/foto')
+                                            ->disk('public')
+                                            ->required(),
+                                    ])
+                                    ->columns(1)
+                                    ->minItems(1)
+                                    ->createItemButtonLabel('Tambah Foto'),
                             ]),
 
-                        // Metadata area (right column)
-                        Forms\Components\TextInput::make('judul')
-                            ->label('Judul Arsip')
-                            ->required()
-                            ->maxLength(255)
-                            ->columnSpan([
-                                'default' => 'full',
-                                'sm' => 1,
+                        // Sidebar for metadata and instructions
+                        Forms\Components\Grid::make()
+                            ->columnSpan(1)
+                            ->schema([
+                                Forms\Components\Section::make('Detail Dokumen')
+                                    ->schema([
+                                        Forms\Components\TextInput::make('judul')
+                                            ->label('Judul Arsip')
+                                            ->required()
+                                            ->maxLength(255),
+                                        Forms\Components\Select::make('kategori_id')
+                                            ->label('Kategori')
+                                            ->options(Kategori::pluck('nama', 'id'))
+                                            ->required(),
+                                        Forms\Components\Select::make('subjek_id')
+                                            ->label('Subjek')
+                                            ->options(Subjek::pluck('nama', 'id'))
+                                            ->nullable()
+                                            ->searchable(),
+                                        Forms\Components\Textarea::make('deskripsi')
+                                            ->label('Deskripsi')
+                                            ->rows(4),
+                                    ]),
+                                Forms\Components\Section::make('Petunjuk')
+                                    ->schema([
+                                        Forms\Components\Placeholder::make('info')
+                                            ->content('Ambil foto satu per satu. Gunakan tombol "Tambah Foto" untuk menambah foto. Setelah selesai, klik Simpan untuk menggabungkan foto menjadi satu dokumen PDF yang akan disimpan di Arsip.'),
+                                    ]),
                             ]),
-
-                        Forms\Components\Textarea::make('deskripsi')
-                            ->label('Deskripsi')
-                            ->rows(4)
-                            ->columnSpan([
-                                'default' => 'full',
-                                'sm' => 2, // span both columns on small+ screens
-                            ]),
-
-                        Forms\Components\Select::make('kategori_id')
-                            ->label('Kategori')
-                            ->options(Kategori::pluck('nama', 'id'))
-                            ->required()
-                            ->columnSpan([
-                                'default' => 'full',
-                                'sm' => 1,
-                            ]),
-                        Forms\Components\Select::make('subjek_id')
-                            ->label('Subjek')
-                            ->options(Subjek::pluck('nama', 'id'))
-                            ->nullable()
-                            ->searchable()
-                            ->columnSpan([
-                                'default' => 'full',
-                                'sm' => 1,
-                            ]),
-                    ])->columns([
-                        'default' => 1,
-                        'sm' => 2,
                     ]),
-
-                    Forms\Components\Placeholder::make('info')
-                        ->content('Ambil foto satu per satu. Gunakan tombol "Tambah Foto" untuk menambah foto. Setelah selesai, klik Simpan untuk menggabungkan foto menjadi satu dokumen PDF yang akan disimpan di Arsip.'),
-                ])->columnSpan('full'),
             ]);
     }
 
