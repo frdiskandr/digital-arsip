@@ -12,9 +12,12 @@
             .page {
                 text-align: center;
             }
-            .page:not(:last-child) {
-                page-break-after: always;
+            .page:not(:first-child) {
+                page-break-before: always;
             }
+            /* .page:not(:last-child) {
+                page-break-after: always;
+            } */
             img {
                 max-width: 100%;
                 height: auto;
