@@ -28,7 +28,7 @@ class TrashArsip extends Page implements HasTable
     protected static ?string $navigationLabel = 'Arsip Terhapus';
     protected static ?string $navigationIcon = 'heroicon-o-trash';
     protected static ?int $navigationSort = 10;
-    protected static ?string $navigationGroup = 'Arsip';
+    protected static ?string $navigationGroup = 'Manajemen Arsip';
 
     public static function getNavigationIconColor(): string | array | null
     {

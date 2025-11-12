@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\PictureResource\Pages;
 use App\Models\Picture;
 use App\Models\Kategori;
+use App\Models\Subjek;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -70,6 +71,15 @@ class PictureResource extends Resource
                             ->label('Kategori')
                             ->options(Kategori::pluck('nama', 'id'))
                             ->required()
+                            ->columnSpan([
+                                'default' => 'full',
+                                'sm' => 1,
+                            ]),
+                        Forms\Components\Select::make('subjek_id')
+                            ->label('Subjek')
+                            ->options(Subjek::pluck('nama', 'id'))
+                            ->nullable()
+                            ->searchable()
                             ->columnSpan([
                                 'default' => 'full',
                                 'sm' => 1,

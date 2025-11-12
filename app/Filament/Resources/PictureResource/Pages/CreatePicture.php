@@ -61,6 +61,7 @@ class CreatePicture extends CreateRecord
             'judul' => $state['judul'] ?? 'Dokumen Foto',
             'deskripsi' => $state['deskripsi'] ?? null,
             'kategori_id' => $state['kategori_id'] ?? null,
+            'subjek_id' => $state['subjek_id'] ?? null,
             'file_path' => $filename,
             'user_id' => Auth::id(),
             'tanggal_arsip' => now(),
