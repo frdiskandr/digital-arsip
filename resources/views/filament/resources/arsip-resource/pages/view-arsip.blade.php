@@ -8,7 +8,7 @@
                 >
                     {{ $record->judul }}
                 </h2>
-                <div class="mt-2 flex items-center gap-2">
+                <div class="mt-10 md:mt-2 flex items-center gap-2 ">
                     @php // helper to compute readable text color
                     $computeTextColor = function ($hex) { $hex = ltrim($hex ??
                     '', '#'); if (strlen($hex) === 3) { $hex =
@@ -37,17 +37,7 @@
                 </div>
             </div>
             @php $fileUrl = $record->file_url; $filePath = $record->file_path;
-            @endphp @if ($filePath &&
-            Illuminate\Support\Facades\Storage::disk('public')->exists($filePath))
-            <a
-                href="{{ $fileUrl }}"
-                target="_blank"
-                class="inline-flex items-center px-4 py-2 bg-primary-600 dark:bg-primary-500 text-white font-semibold rounded-lg hover:bg-primary-700 dark:hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
-            >
-                <x-heroicon-o-arrow-down-tray class="w-5 h-5 mr-2" />
-                Unduh File
-            </a>
-            @endif
+            @endphp
         </div>
         <p class="text-gray-500 dark:text-gray-300 mb-4">
             {{ $record->deskripsi }}
