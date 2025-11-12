@@ -44,55 +44,61 @@ class ArsipResource extends Resource
     {
         return $form
             ->schema([
+                Forms\Components\Section::make('Detail Arsip')
+                    ->description('Masukkan informasi utama mengenai arsip ini.')
+                    ->schema([
+                        Forms\Components\TextInput::make('judul')
+                            ->label('Judul Arsip')
+                            ->required()
+                            ->maxLength(255),
+                        Forms\Components\Textarea::make('deskripsi')
+                            ->label('Deskripsi')
+                            ->rows(3),
+                    ]),
 
-                Forms\Components\TextInput::make('judul')
-                    ->label('Judul Arsip')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\DatePicker::make('created_at')
-                    ->label('Tanggal Arsip')
-                    ->required()
-                    ->default(now())
-                    ->maxDate(now()),
-                Forms\Components\Textarea::make('deskripsi')
-                    ->label('Deskripsi')
-                    ->rows(3),
-                Forms\Components\Select::make('kategori_id')
-                    ->label('Kategori')
-                    ->options(Kategori::all()->pluck('nama', 'id'))
-                    ->required(),
-                Forms\Components\Select::make('subjek_id')
-                    ->label('Subjek')
-                    ->options(Subjek::all()->pluck('nama', 'id'))
-                    ->nullable()
-                    ->helperText('Opsional: pilih subjek untuk arsip ini'),
-                // Forms\Components\FileUpload::make('file_path')
-                //     ->label('File Arsip (PDF/DOC)')
-                //     ->directory('arsip')
-                //   ->sortable()  ->preserveFilenames()
-                //     ->openable()
-                //     ->downloadable()
-                //     ->required(),
-                FileUpload::make('file_path')
-                    ->label('File Arsip')
-                    ->helperText('Upload file apapun (DOC, PDF, XLS, JPG, ZIP, dll)')
-                    ->directory('arsip')
-                    ->disk('public')
-                    ->required()
-                    ->downloadable()
-                    ->openable()
-                    ->maxSize(102400)
-                    ->getUploadedFileNameForStorageUsing(
-                        function (\Livewire\Features\SupportFileUploads\TemporaryUploadedFile $file): string {
-                            $fileName = $file->getClientOriginalName();
-                            $extension = $file->getClientOriginalExtension();
-                            $nameWithoutExtension = str_replace('.' . $extension, '', $fileName);
+                Forms\Components\Section::make('Klasifikasi & File')
+                    ->schema([
+                        Forms\Components\Grid::make(2)->schema([
+                            Forms\Components\Select::make('kategori_id')
+                                ->label('Kategori')
+                                ->options(Kategori::all()->pluck('nama', 'id'))
+                                ->required(),
+                            Forms\Components\Select::make('subjek_id')
+                                ->label('Subjek')
+                                ->options(Subjek::all()->pluck('nama', 'id'))
+                                ->nullable()
+                                ->helperText('Opsional'),
+                        ]),
+                        FileUpload::make('file_path')
+                            ->label('File Arsip')
+                            ->helperText('Upload file apapun (DOC, PDF, XLS, JPG, ZIP, dll)')
+                            ->directory('arsip')
+                            ->disk('public')
+                            ->required()
+                            ->downloadable()
+                            ->openable()
+                            ->maxSize(102400)
+                            ->getUploadedFileNameForStorageUsing(
+                                function (\Livewire\Features\SupportFileUploads\TemporaryUploadedFile $file): string {
+                                    $fileName = $file->getClientOriginalName();
+                                    $extension = $file->getClientOriginalExtension();
+                                    $nameWithoutExtension = str_replace('.' . $extension, '', $fileName);
 
-                            return date('Y-m-d-His') . '_' .
-                                md5($nameWithoutExtension . time()) . '_' .
-                                str_replace([' ', '#', '&', '{', '}', '<', '>', '*', '?', '/', '\\', '$', '!', '\'', '"', ':', '@', '+', '`', '|', '='], '-', $fileName);
-                        }
-                    )
+                                    return date('Y-m-d-His') . '_' .
+                                        md5($nameWithoutExtension . time()) . '_' .
+                                        str_replace([' ', '#', '&', '{', '}', '<', '>', '*', '?', '/', '\\', '$', '!', '\'', '"', ':', '@', '+', '`', '|', '='], '-', $fileName);
+                                }
+                            ),
+                    ]),
+
+                Forms\Components\Section::make('Metadata')
+                    ->schema([
+                        Forms\Components\DatePicker::make('created_at')
+                            ->label('Tanggal Arsip')
+                            ->required()
+                            ->default(now())
+                            ->maxDate(now()),
+                    ]),
             ]);
     }
 
