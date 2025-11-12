@@ -10,8 +10,10 @@
                 padding: 0;
             }
             .page {
-                page-break-after: always;
                 text-align: center;
+            }
+            .page:not(:last-child) {
+                page-break-after: always;
             }
             img {
                 max-width: 100%;

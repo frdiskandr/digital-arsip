@@ -19,14 +19,12 @@ class CreatePicture extends CreateRecord
     {
         $state = $this->form->getState();
 
-        // Collect taken photo paths
-        $photos = $state['photos'] ?? [];
-        $paths = [];
-        foreach ($photos as $item) {
-            if (!empty($item['path'])) {
-                $paths[] = $item['path'];
-            }
-        }
+        // Use a collection to robustly filter out empty entries from the repeater
+        $paths = collect($state['photos'] ?? [])
+            ->pluck('path')
+            ->filter()
+            ->values()
+            ->all();
 
         if (empty($paths)) {
             Notification::make()->danger()->title('Tidak ada foto yang diambil.')->send();
