@@ -14,6 +14,9 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\BulkAction;
 use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\Filter;
+use Filament\Forms\Components\DatePicker;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Filament\Notifications\Notification;
 use App\Filament\Resources\ArsipResource; // Import ArsipResource
@@ -25,6 +28,12 @@ class TrashArsip extends Page implements HasTable
     protected static ?string $navigationLabel = 'Arsip Terhapus';
     protected static ?string $navigationIcon = 'heroicon-o-trash';
     protected static ?int $navigationSort = 10;
+    protected static ?string $navigationGroup = 'Arsip';
+
+    public static function getNavigationIconColor(): string | array | null
+    {
+        return 'danger';
+    }
 
     protected static string $view = 'filament.resources.arsip-resource.pages.trash-arsip';
 
@@ -69,6 +78,22 @@ class TrashArsip extends Page implements HasTable
                 SelectFilter::make('subjek_id')
                     ->label('Filter Subjek')
                     ->options(Subjek::pluck('nama', 'id')),
+                Filter::make('deleted_at')
+                    ->form([
+                        DatePicker::make('deleted_from')->label('Dihapus dari'),
+                        DatePicker::make('deleted_until')->label('Dihapus sampai'),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['deleted_from'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('deleted_at', '>=', $date),
+                            )
+                            ->when(
+                                $data['deleted_until'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('deleted_at', '<=', $date),
+                            );
+                    })
             ])
             ->actions([
                 Action::make('restore')
@@ -79,7 +104,7 @@ class TrashArsip extends Page implements HasTable
                     ->requiresConfirmation(),
 
                 Action::make('forceDelete')
-                    ->label('Hapus Permanen')
+                    ->label('Permanent Delete')
                     ->icon('heroicon-o-x-mark')
                     ->color('danger')
                     ->action(function (Arsip $record) {
