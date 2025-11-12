@@ -4,12 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
 
 class Arsip extends Model
 {
-    use HasFactory, LogsActivity;
+    use HasFactory, LogsActivity, SoftDeletes;
 
     protected $fillable = [
         'judul',
@@ -72,7 +73,7 @@ class Arsip extends Model
         if ($this->file_path) {
             $fileName = basename($this->file_path);
             // Remove timestamp and hash from filename if present
-            if (preg_match('/\d{4}-\d{2}-\d{2}-\d{6}_[a-f0-9]{32}_(.+)$/', $fileName, $matches)) {
+            if (preg_match('/\\d{4}-\\d{2}-\\d{2}-\\d{6}_[a-f0-9]{32}_(.+)$/', $fileName, $matches)) {
                 return $matches[1];
             }
             return $fileName;
@@ -91,11 +92,20 @@ class Arsip extends Model
         // If original_file_name column exists and not set, try to extract original name
         if (empty($this->attributes['original_file_name']) && $value) {
             $fileName = basename($value);
-            if (preg_match('/\d{4}-\d{2}-\d{2}-\d{6}_[a-f0-9]{32}_(.+)$/', $fileName, $matches)) {
+            if (preg_match('/\\d{4}-\\d{2}-\\d{2}-\\d{6}_[a-f0-9]{32}_(.+)$/', $fileName, $matches)) {
                 $this->attributes['original_file_name'] = $matches[1];
             } else {
                 $this->attributes['original_file_name'] = $fileName;
             }
         }
     }
+
+    /**
+     * Casts
+     */
+    protected $casts = [
+        'deleted_at' => 'datetime',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+    ];
 }

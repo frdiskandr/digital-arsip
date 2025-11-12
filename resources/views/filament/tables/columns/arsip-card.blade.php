@@ -1,8 +1,12 @@
-@php /** @var \App\Models\Arsip $record */ $record = $record ?? null;
+@php
+/** @var \App\Models\Arsip $record */ $record = $record ?? null;
+
 $kategoriColor = $record?->kategori?->color ?? '#F3F4F6'; $title =
 e($record->judul ?? ''); $original = e($record->original_file_name ?? ''); $user
 = e($record->user?->name ?? 'N/A'); $tanggal = $record->created_at?->format('d M
-Y') ?? ''; @endphp
+Y') ?? '';
+
+@endphp
 
 <div
     class="flex items-start gap-4 p-3 rounded-md"

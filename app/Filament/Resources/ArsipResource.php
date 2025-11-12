@@ -243,6 +243,7 @@ class ArsipResource extends Resource
         return [
             'index' => Pages\ListArsips::route('/'),
             'create' => Pages\CreateArsip::route('/create'),
+            'trash' => Pages\TrashArsip::route('/trash'),
             'edit' => Pages\EditArsip::route('/{record}/edit'),
             'view' => Pages\ViewArsip::route('/{record}'),
         ];
