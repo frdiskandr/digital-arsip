@@ -215,9 +215,7 @@ class ArsipResource extends Resource
                     ->label('')
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
-                ]),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('kategori_id')
