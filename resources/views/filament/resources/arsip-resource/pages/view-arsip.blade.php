@@ -174,12 +174,14 @@
                                             v{{ $version->version }}
                                         </span>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">{{ Str::limit($version->judul, 50) }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
-                                        <div class="flex items-center">
-                                            <img class="h-8 w-8 rounded-full object-cover mr-3" src="{{ 'https://www.gravatar.com/avatar/' . md5(strtolower(trim($version->user?->email ?? ''))) . '?d=mp' }}" alt="{{ $version->user?->name ?? 'N/A' }}" />
-                                            <span>{{ $version->user?->name ?? 'N/A' }}</span>
+                                    <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-300">
+                                        <div class="flex flex-col">
+                                            <span class="font-medium text-gray-950 dark:text-white">{{ Str::limit($version->judul, 50) }}</span>
+                                            <span class="text-xs text-gray-500 dark:text-gray-400">{{ $version->original_file_name }}</span>
                                         </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
+                                        {{ $version->user?->name ?? 'N/A' }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">{{ $version->created_at->format('d M Y, H:i') }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
