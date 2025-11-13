@@ -57,7 +57,7 @@ class PictureResource extends Resource
                                             ->required()
                                             ->maxLength(255),
                                         Forms\Components\Select::make('kategori_id')
-                                            ->label('Kategori')
+                                            ->label('Fungsi')
                                             ->options(Kategori::pluck('nama', 'id'))
                                             ->required(),
                                         Forms\Components\Select::make('subjek_id')

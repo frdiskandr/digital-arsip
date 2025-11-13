@@ -18,7 +18,7 @@ class KategoriResource extends Resource
     protected static ?string $model = Kategori::class;
     protected static ?string $navigationIcon = 'heroicon-o-tag';
 
-    protected static ?string $navigationLabel = 'kategori Fungsi Arsip';
+    protected static ?string $navigationLabel = 'Fungsi Arsip';
     protected static ?string $pluralModelLabel = 'Fungsi Arsip';
     protected static ?string $modelLabel = 'Fungsi Arsip';
     protected static ?string $navigationGroup = 'Manajemen Arsip';

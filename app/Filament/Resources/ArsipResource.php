@@ -60,7 +60,7 @@ class ArsipResource extends Resource
                     ->schema([
                         Forms\Components\Grid::make(2)->schema([
                             Forms\Components\Select::make('kategori_id')
-                                ->label('Kategori')
+                                ->label('Fungsi')
                                 ->options(Kategori::all()->pluck('nama', 'id'))
                                 ->required(),
                             Forms\Components\Select::make('subjek_id')
@@ -152,7 +152,7 @@ class ArsipResource extends Resource
 
                 // Kategori
                 Tables\Columns\TextColumn::make('kategori.nama')
-                    ->label('Kategori')
+                    ->label('Fungsi')
                     ->formatStateUsing(fn($state, Arsip $record) => view('filament.components.kategori-badge', ['name' => $state, 'color' => $record->kategori?->color ?? '#6b7280'])->render())
                     ->html()
                     ->searchable()
@@ -219,7 +219,7 @@ class ArsipResource extends Resource
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('kategori_id')
-                    ->label('Filter By Kategori')
+                    ->label('Filter By fungsi arsip')
                     ->options(Kategori::pluck('nama', 'id')),
                 Tables\Filters\SelectFilter::make('subjek_id')
                     ->label('Filter By Subjek')
