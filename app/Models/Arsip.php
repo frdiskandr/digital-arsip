@@ -21,7 +21,46 @@ class Arsip extends Model
         'user_id',
         'tanggal_arsip',
         'original_file_name',
+        'version',
     ];
+
+    /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function booted()
+    {
+        static::saving(function ($arsip) {
+            // Only create a version if the record already exists (it's an update)
+            // and if something has actually changed.
+            if ($arsip->exists && $arsip->isDirty()) {
+                $originalData = $arsip->getOriginal();
+
+                // Create a snapshot of the current version before it's updated
+                $arsip->versions()->create([
+                    'version'            => $originalData['version'],
+                    'judul'              => $originalData['judul'],
+                    'deskripsi'          => $originalData['deskripsi'],
+                    'file_path'          => $originalData['file_path'],
+                    'original_file_name' => $originalData['original_file_name'],
+                    'user_id'            => auth()->id(), // The user making the change
+                    'created_at'         => $originalData['updated_at'], // The date of the old version
+                ]);
+
+                // Increment the version for the new update
+                $arsip->version++;
+            }
+        });
+    }
+
+    /**
+     * Get all historical versions for the archive.
+     */
+    public function versions()
+    {
+        return $this->hasMany(ArsipVersion::class)->orderBy('version', 'desc');
+    }
 
     /**
      * Configure activity logging options for Arsip model.

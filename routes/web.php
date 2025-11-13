@@ -28,3 +28,8 @@ Route::get('/arsip/view/{record}', ArsipViewController::class)
 Route::get('/arsip/download/{record}', ArsipDownloadController::class)
     ->name('arsip.download')
     ->middleware('auth');
+
+// Route for downloading specific historical versions
+Route::get('/arsip-version/download/{version}', \App\Http\Controllers\ArsipVersionDownloadController::class)
+    ->name('arsip.version.download')
+    ->middleware('auth');

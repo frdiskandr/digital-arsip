@@ -46,4 +46,9 @@ class ViewArsip extends ViewRecord
     {
         return static::getResource()::getEloquentQuery()->withTrashed()->findOrFail($key);
     }
+
+    public function getRelationManagers(): array
+    {
+        return parent::getRelationManagers();
+    }
 }

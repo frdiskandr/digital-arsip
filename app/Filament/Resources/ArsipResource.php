@@ -20,6 +20,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 
 
+use App\Filament\Resources\ArsipResource\RelationManagers\VersionsRelationManager;
+
 class ArsipResource extends Resource
 {
     protected static ?string $model = Arsip::class;
@@ -240,6 +242,7 @@ class ArsipResource extends Resource
     public static function getRelations(): array
     {
         return [
+            VersionsRelationManager::class,
             RelationManagers\ActivitiesRelationManager::class,
         ];
     }
