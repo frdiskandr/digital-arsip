@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ArsipViewController;
+use App\Http\Controllers\ArsipDownloadController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,174 +19,12 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// Backwards-compatible alias for Filament profile auth route.
-// Filament expects a route named `filament.{panelId}.auth.profile` in some places
-// (for example when building the user menu). The Panel already registers
-// the profile page as a regular page route (filament.{panelId}.profile), so
-// provide a small redirect route that has the expected name.
-Route::get('admin/auth/profile', function () {
-    return redirect()->route('filament.admin.profile');
-})->name('filament.admin.profile');
+// Route for viewing/previewing files
+Route::get('/arsip/view/{record}', ArsipViewController::class)
+    ->name('arsip.view')
+    ->middleware('auth');
 
-
-// Temporary debug route to help diagnose auth/session/DB issues on servers (remove after use)
-Route::get('/debug-app', function (Illuminate\Http\Request $request) {
-    if (!config('app.debug')) {
-        abort(404);
-    }
-
-    $email = $request->query('email');
-    $password = $request->query('password');
-
-    $result = [];
-
-    // Basic app/env info
-    $result['app_env'] = config('app.env');
-    $result['app_debug'] = config('app.debug');
-    $result['app_url'] = config('app.url');
-    $result['app_key_present'] = !empty(env('APP_KEY'));
-
-    // Session config
-    $result['session_driver'] = config('session.driver');
-    $result['session_cookie'] = config('session.cookie');
-    $result['session_domain'] = config('session.domain');
-    $result['session_secure_cookie'] = config('session.secure_cookie');
-    $result['session_table_exists'] = Illuminate\Support\Facades\Schema::hasTable('sessions');
-
-    // Storage & permissions
-    $result['storage_writable'] = is_writable(storage_path());
-    $result['bootstrap_cache_writable'] = is_writable(base_path('bootstrap/cache'));
-
-    // Request / proxy headers
-    $result['request_host'] = $request->getHost();
-    $result['request_scheme'] = $request->getScheme();
-    $result['x_forwarded_proto'] = $request->headers->get('x-forwarded-proto');
-    $result['cookies'] = $request->cookies->all();
-
-    // DB connectivity and counts
-    try {
-        Illuminate\Support\Facades\DB::connection()->getPdo();
-        $result['db_connected'] = true;
-        try {
-            $result['users_count'] = App\Models\User::count();
-        } catch (Throwable $e) {
-            $result['users_count_error'] = $e->getMessage();
-        }
-    } catch (Throwable $e) {
-        $result['db_connected'] = false;
-        $result['db_error'] = $e->getMessage();
-    }
-
-    // If email provided, show user and password check (BE CAREFUL: do not expose in public)
-    if ($email) {
-        try {
-            $user = App\Models\User::where('email', $email)->first();
-            $result['user_found'] = $user ? true : false;
-            if ($user) {
-                $result['user'] = [
-                    'id' => $user->id,
-                    'email' => $user->email,
-                    'password_hash_length' => (int) strlen($user->password),
-                ];
-                if ($password) {
-                    $result['password_match'] = Illuminate\Support\Facades\Hash::check($password, $user->password);
-                }
-            }
-        } catch (Throwable $e) {
-            $result['user_error'] = $e->getMessage();
-        }
-    }
-
-    return response()->json($result);
-});
-
-
-// Debug a specific storage file (only when APP_DEBUG=true)
-Route::get('/debug-file', function (Illuminate\Http\Request $request) {
-    if (!config('app.debug')) {
-        abort(404);
-    }
-
-    $path = $request->query('path'); // ex: arsip/2025/abc.pdf  (relative to storage/app/public)
-    if (! $path) {
-        return response()->json(['error' => 'missing path query parameter, example: ?path=folder/file.pdf'], 400);
-    }
-
-    // sanitize input: prevent directory traversal
-    $rel = ltrim(str_replace(['..', "\\"], ['', '/'], $path), '/');
-
-    $publicPath = public_path('storage/' . $rel);
-    $storagePath = storage_path('app/public/' . $rel);
-
-    $existsPublic = file_exists($publicPath);
-    $existsStorage = file_exists($storagePath);
-
-    $isStorageLink = is_link(public_path('storage'));
-    $linkTarget = $isStorageLink ? readlink(public_path('storage')) : null;
-
-    $result = [
-        'requested' => $rel,
-        'public_path' => $publicPath,
-        'storage_path' => $storagePath,
-        'exists_public' => $existsPublic,
-        'exists_storage' => $existsStorage,
-        'real_public' => $existsPublic ? realpath($publicPath) : null,
-        'real_storage' => $existsStorage ? realpath($storagePath) : null,
-        'is_public_readable' => $existsPublic ? is_readable($publicPath) : false,
-        'is_storage_readable' => $existsStorage ? is_readable($storagePath) : false,
-        'public_fileperms' => $existsPublic ? sprintf('%o', fileperms($publicPath) & 0x1FF) : null,
-        'storage_fileperms' => $existsStorage ? sprintf('%o', fileperms($storagePath) & 0x1FF) : null,
-        'public_size' => $existsPublic ? filesize($publicPath) : null,
-        'storage_size' => $existsStorage ? filesize($storagePath) : null,
-        'is_storage_link' => $isStorageLink,
-        'storage_link_target' => $linkTarget,
-        'public_mime' => $existsPublic ? @mime_content_type($publicPath) : null,
-    ];
-
-    // Add owner info if posix functions available
-    if ($existsPublic) {
-        $result['public_owner_uid'] = fileowner($publicPath);
-        if (function_exists('posix_getpwuid')) {
-            $result['public_owner'] = posix_getpwuid(fileowner($publicPath));
-        }
-    }
-    if ($existsStorage) {
-        $result['storage_owner_uid'] = fileowner($storagePath);
-        if (function_exists('posix_getpwuid')) {
-            $result['storage_owner'] = posix_getpwuid(fileowner($storagePath));
-        }
-    }
-
-    return response()->json($result);
-});
-
-
-
-Route::get('/make-admin', function (Illuminate\Http\Request $req) {
-    if (!config('app.debug')) {
-        abort(404);
-    }
-
-    $secret = env('MAKE_ADMIN_KEY'); // set di .env di server
-    if (!$secret || $req->query('key') !== $secret) {
-        abort(403);
-    }
-
-    $email = $req->query('email') ?? 'fariditb159@gmail.com';
-    $password = $req->query('password') ?? 'Faridiskandar123';
-
-    $user = \App\Models\User::firstOrCreate(
-        ['email' => $email],
-        [
-            'name' => 'Admin',
-            'password' => \Illuminate\Support\Facades\Hash::make($password),
-            'email_verified_at' => now(),
-        ]
-    );
-
-    return response()->json([
-        'created' => $user->wasRecentlyCreated ?? false,
-        'id' => $user->id,
-        'email' => $user->email,
-    ]);
-});
+// Route for force-downloading files
+Route::get('/arsip/download/{record}', ArsipDownloadController::class)
+    ->name('arsip.download')
+    ->middleware('auth');

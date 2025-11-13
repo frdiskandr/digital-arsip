@@ -73,7 +73,7 @@ class ArsipResource extends Resource
                             ->label('File Arsip')
                             ->helperText('Upload file apapun (DOC, PDF, XLS, JPG, ZIP, dll)')
                             ->directory('arsip')
-                            ->disk('public')
+                            ->disk('local')
                             ->required()
                             ->downloadable()
                             ->openable()
@@ -199,13 +199,13 @@ class ArsipResource extends Resource
                         ->label('Lihat')
                         ->icon('heroicon-o-eye')
                         ->url(fn(Arsip $record) => ArsipResource::getUrl('view', ['record' => $record]))
-                        ->visible(fn(Arsip $record) => $record->file_path && Storage::disk('public')->exists($record->file_path)),
+                        ->visible(fn(Arsip $record) => $record->file_path && Storage::disk('local')->exists($record->file_path)),
                     Tables\Actions\Action::make('download')
                         ->label('Download')
                         ->icon('heroicon-o-arrow-down-tray')
-                        ->url(fn(Arsip $record) => $record->file_url)
+                        ->url(fn(Arsip $record) => route('arsip.download', ['record' => $record]))
                         ->openUrlInNewTab()
-                        ->visible(fn(Arsip $record) => $record->file_path && Storage::disk('public')->exists($record->file_path)),
+                        ->visible(fn(Arsip $record) => $record->file_path && Storage::disk('local')->exists($record->file_path)),
                     Tables\Actions\EditAction::make(),
                     Tables\Actions\DeleteAction::make(),
                 ])

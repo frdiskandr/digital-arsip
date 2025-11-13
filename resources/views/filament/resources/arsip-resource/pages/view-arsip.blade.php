@@ -36,7 +36,7 @@
                     @endif
                 </div>
             </div>
-            @php $fileUrl = $record->file_url; $filePath = $record->file_path;
+            @php $fileUrl = route('arsip.view', ['record' => $record]); $filePath = $record->file_path;
             @endphp
         </div>
         <p class="text-gray-500 dark:text-gray-300 mb-4">
@@ -46,9 +46,9 @@
         @php $extension = pathinfo($filePath, PATHINFO_EXTENSION);
         $supportedExtensions = ['pdf', 'jpg', 'jpeg', 'png', 'gif', 'mp4'];
         $officeExtensions = ['xlsx', 'xls', 'txt']; $fileSize =
-        Illuminate\Support\Facades\Storage::disk('public')->size($filePath);
+        Illuminate\Support\Facades\Storage::disk('local')->size($filePath);
         @endphp @if ($filePath &&
-        Illuminate\Support\Facades\Storage::disk('public')->exists($filePath))
+        Illuminate\Support\Facades\Storage::disk('local')->exists($filePath))
         @if (in_array($extension, ['pdf', 'jpg', 'jpeg', 'png', 'gif']))
         <div
             class="border rounded-lg overflow-hidden mb-4 bg-white dark:bg-gray-900"
@@ -75,7 +75,7 @@
         >
             @if ($extension == 'txt')
             <pre
-                >{{ Illuminate\Support\Facades\Storage::disk('public')->get($filePath) }}</pre
+                >{{ Illuminate\Support\Facades\Storage::disk('local')->get($filePath) }}</pre
             >
             @else @if ($fileSize > 5 * 1024 * 1024) {{-- 5MB --}}
             <div
@@ -225,4 +225,3 @@
         @endif
     </div>
 </x-filament-panels::page>
-

@@ -36,9 +36,9 @@ class ViewArsip extends ViewRecord
             Action::make('download')
                 ->label('Unduh')
                 ->icon('heroicon-o-arrow-down-tray')
-                ->url(fn() => $this->record?->file_url)
+                ->url(fn() => route('arsip.download', ['record' => $this->record]))
                 ->openUrlInNewTab()
-                ->visible(fn() => $this->record && $this->record->file_path && Storage::disk('public')->exists($this->record->file_path)),
+                ->visible(fn() => $this->record && $this->record->file_path && Storage::disk('local')->exists($this->record->file_path)),
         ];
     }
 
