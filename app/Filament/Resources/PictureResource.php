@@ -38,7 +38,7 @@ class PictureResource extends Resource
                                         TakePicture::make('path')
                                             ->label('Ambil Gambar')
                                             ->directory('arsip/foto')
-                                            ->disk('public')
+                                            ->disk('local')
                                             ->required(),
                                     ])
                                     ->columns(1)

@@ -34,9 +34,9 @@ class CreatePicture extends CreateRecord
         // Prepare absolute file paths for Dompdf
         $images = [];
         foreach ($paths as $p) {
-            if (Storage::disk('public')->exists($p)) {
+            if (Storage::disk('local')->exists($p)) {
                 // use storage_path for Dompdf local file access
-                $images[] = storage_path('app/public/' . ltrim($p, '/'));
+                $images[] = storage_path('app/' . ltrim($p, '/'));
             }
         }
 
@@ -52,9 +52,9 @@ class CreatePicture extends CreateRecord
         $pdf = PDF::loadHTML($html)->setPaper('a4', 'portrait');
         $pdfContent = $pdf->output();
 
-        // Store PDF in public disk under arsip/
+        // Store PDF in local disk under arsip/
         $filename = 'arsip/' . date('Y-m-d-His') . '_' . Str::random(8) . '.pdf';
-        Storage::disk('public')->put($filename, $pdfContent);
+        Storage::disk('local')->put($filename, $pdfContent);
 
         // Create Arsip record
         $arsip = Arsip::create([
@@ -70,8 +70,8 @@ class CreatePicture extends CreateRecord
         // Delete original uploaded images (they were only used to build the PDF)
         foreach ($paths as $p) {
             try {
-                if (Storage::disk('public')->exists($p)) {
-                    Storage::disk('public')->delete($p);
+                if (Storage::disk('local')->exists($p)) {
+                    Storage::disk('local')->delete($p);
                 }
             } catch (\Throwable $e) {
                 // don't break the flow if a file can't be deleted; log for later inspection
