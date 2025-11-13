@@ -39,6 +39,7 @@ class PictureResource extends Resource
                                             ->label('Ambil Gambar')
                                             ->directory('arsip/foto')
                                             ->disk('local')
+                                            ->mirrored(false)
                                             ->required(),
                                     ])
                                     ->columns(1)
