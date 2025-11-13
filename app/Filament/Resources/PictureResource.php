@@ -39,7 +39,10 @@ class PictureResource extends Resource
                                             ->label('Ambil Gambar')
                                             ->directory('arsip/foto')
                                             ->disk('local')
-                                            ->mirrored(false)
+                                            ->useModal(true)
+                                            ->showCameraSelector(true)
+                                            ->aspect('16:9')
+                                            ->imageQuality(80)
                                             ->required(),
                                     ])
                                     ->columns(1)
