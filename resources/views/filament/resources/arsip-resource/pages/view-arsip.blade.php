@@ -144,9 +144,7 @@
             $versions = $versions ?? $record->versions()->orderBy('version', 'desc')->paginate(5);
         @endphp
         <div class="mt-8">
-            <h3 class="text-lg font-semibold mb-4 text-gray-900 dark:text-white">
-                Riwayat Versi
-            </h3>
+            <h3 class="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Riwayat Versi</h3>
 
             @if ($versions->count() == 0)
                 <div class="flex flex-col items-center justify-center p-8 text-center bg-white border border-gray-200 rounded-lg dark:bg-gray-800 dark:border-gray-700">
@@ -157,51 +155,56 @@
                     <p class="text-sm text-gray-500 dark:text-gray-400">Setiap pembaruan pada arsip ini akan dicatat di sini.</p>
                 </div>
             @else
-                <div class="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
-                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                        <thead class="bg-gray-50 dark:bg-gray-800/50">
-                            <tr>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Versi</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Judul</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Diubah oleh</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Tanggal Versi</th>
-                                <th scope="col" class="relative px-6 py-3">
-                                    <span class="sr-only">Actions</span>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                            @foreach ($versions as $version)
+                <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                            <thead class="bg-gray-50 dark:bg-gray-900/40">
                                 <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="inline-flex items-center justify-center min-h-6 px-2 py-0.5 text-sm font-medium tracking-tight rounded-xl text-primary-700 bg-primary-500/10 dark:text-primary-500">
-                                            v{{ $version->version }}
-                                        </span>
-                                    </td>
-                                    <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-300">
-                                        <div class="flex flex-col">
-                                            <span class="font-medium text-gray-950 dark:text-white">{{ Str::limit($version->judul, 50) }}</span>
-                                            <span class="text-xs text-gray-500 dark:text-gray-400">{{ $version->original_file_name }}</span>
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
-                                        {{ $version->user?->name ?? 'N/A' }}
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">{{ $version->created_at->format('d M Y, H:i') }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <a href="{{ route('arsip.version.download', ['version' => $version]) }}" target="_blank" class="inline-flex items-center justify-center h-9 w-9 text-primary-600 hover:bg-gray-500/5 rounded-full dark:text-primary-400">
-                                            <x-heroicon-o-arrow-down-tray class="w-5 h-5"/>
-                                        </a>
-                                    </td>
+                                    <th scope="col" class="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Versi</th>
+                                    <th scope="col" class="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Judul & File</th>
+                                    <th scope="col" class="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Diubah oleh</th>
+                                    <th scope="col" class="px-4 py-3 text-left hidden md:table-cell text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Tanggal Versi</th>
+                                    <th scope="col" class="px-4 py-3 text-right text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Aksi</th>
                                 </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                            </thead>
+
+                            <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-100 dark:divide-gray-700">
+                                @foreach ($versions as $version)
+                                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-900">
+                                        <td class="px-4 py-3 align-top whitespace-nowrap">
+                                            <span class="inline-flex items-center px-2.5 py-1 text-xs font-semibold rounded-full bg-primary-50 text-primary-700 dark:bg-primary-900/20 dark:text-primary-300">v{{ $version->version }}</span>
+                                        </td>
+
+                                        <td class="px-4 py-3 text-sm text-gray-700 dark:text-gray-200">
+                                            <div class="flex flex-col gap-1">
+                                                <span class="font-medium truncate">{{ Str::limit($version->judul, 80) }}</span>
+                                                <div class="text-xs text-gray-500 dark:text-gray-400 truncate">{{ $version->original_file_name }}</div>
+                                            </div>
+                                        </td>
+
+                                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
+                                            {{ $version->user?->name ?? 'N/A' }}
+                                        </td>
+
+                                        <td class="px-4 py-3 hidden md:table-cell text-sm text-gray-600 dark:text-gray-300">{{ $version->created_at->format('d M Y, H:i') }}</td>
+
+                                        <td class="px-4 py-3 text-right whitespace-nowrap">
+                                            <a href="{{ route('arsip.version.download', ['version' => $version]) }}" target="_blank" class="inline-flex items-center justify-center h-9 w-9 text-primary-600 hover:bg-gray-100 rounded-lg dark:hover:bg-gray-900">
+                                                <x-heroicon-o-arrow-down-tray class="w-5 h-5"/>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
-                <div class="px-4 py-3 bg-white border-t border-gray-100 dark:bg-gray-800 dark:border-gray-700">
-                    {{-- Pagination links (Tailwind) --}}
-                    {{ $versions->links() }}
+                <div class="px-4 py-3 bg-white dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700 flex items-center justify-between">
+                    <div class="text-sm text-gray-600 dark:text-gray-400">Menampilkan <span class="font-medium text-gray-900 dark:text-white">{{ $versions->count() }}</span> dari <span class="font-medium text-gray-900 dark:text-white">{{ $versions->total() }}</span> versi</div>
+                    <div>
+                        {{ $versions->links() }}
+                    </div>
                 </div>
             @endif
         </div>
@@ -224,50 +227,55 @@
             <div class="mt-8 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
                 <h3 class="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Riwayat Perubahan</h3>
 
-                @if ($activities->total() == 0)
-                    <div class="text-gray-500 dark:text-gray-300">
-                        Belum ada riwayat untuk arsip ini.
-                    </div>
-                @else
-                    <div class="space-y-4">
+                @if ($activities && $activities->total() == 0)
+                    <div class="text-gray-500 dark:text-gray-300">Belum ada riwayat untuk arsip ini.</div>
+                @elseif ($activities)
+                    <div class="mt-2 grid gap-4">
                         @foreach ($activities as $activity)
-                            <div class="border rounded-lg p-3 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700">
-                                <div class="flex justify-between items-center">
-                                    <div class="text-sm text-gray-700 dark:text-gray-200">
-                                        <strong>{{ $activity->description }}</strong>
-                                        @if ($activity->causer) oleh <span class="font-medium">{{ $activity->causer->name }}</span> @endif
+                            <article class="relative bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-lg p-4 sm:p-4 shadow-sm hover:shadow-md">
+                                <div class="flex items-start gap-3">
+                                    <div class="shrink-0">
+                                        <div class="h-10 w-10 rounded-full flex items-center justify-center bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200">
+                                            <x-heroicon-o-clock class="w-5 h-5" />
+                                        </div>
                                     </div>
-                                    <div class="text-xs text-gray-500 dark:text-gray-400">{{ $activity->created_at->diffForHumans() }}</div>
-                                </div>
 
-                                @if (!empty($activity->properties) && is_array($activity->properties))
-                                    <div class="mt-2 text-sm text-gray-600">
-                                        @php $props = $activity->properties; @endphp
+                                    <div class="min-w-0 flex-1">
+                                        <div class="flex items-center justify-between gap-4">
+                                            <div class="text-sm leading-6">
+                                                <h4 class="font-semibold text-gray-900 dark:text-white truncate">{{ Str::limit($activity->description, 120) }}</h4>
+                                                @if ($activity->causer)
+                                                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">oleh <span class="font-medium text-gray-700 dark:text-gray-200">{{ $activity->causer->name }}</span></p>
+                                                @endif
+                                            </div>
 
-                                        @if (isset($props['attributes']) || isset($props['old']))
-                                            <table class="w-full text-sm">
-                                                <tbody>
-                                                    @foreach ($props['attributes'] ?? [] as $key => $value)
-                                                        <tr>
-                                                            <td class="font-medium text-gray-700 dark:text-gray-300 w-1/3">{{ $key }}</td>
-                                                            <td class="text-gray-600 dark:text-gray-400">
-                                                                @if(isset($props['old'][$key]))<del class="text-red-500 mr-2">{{ $props["old"][$key] }}</del>@endif
-                                                                <span>{{ $value }}</span>
-                                                            </td>
-                                                        </tr>
-                                                    @endforeach
-                                                </tbody>
-                                            </table>
-                                        @else
-                                            <pre class="whitespace-pre-wrap text-gray-600 dark:text-gray-300">{{ json_encode($activity->properties, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) }}</pre>
+                                            <div class="text-xs text-gray-400 dark:text-gray-500 whitespace-nowrap">{{ $activity->created_at->diffForHumans() }}</div>
+                                        </div>
+
+                                        @if (!empty($activity->properties) && is_array($activity->properties))
+                                            <div class="mt-3 text-sm text-gray-600 dark:text-gray-300">
+                                                @php $props = $activity->properties; @endphp
+                                                @if (isset($props['attributes']) || isset($props['old']))
+                                                    <dl class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                                        @foreach ($props['attributes'] ?? [] as $key => $value)
+                                                            <div class="flex items-start gap-2">
+                                                                <dt class="font-medium text-gray-700 dark:text-gray-200 text-xs w-32">{{ $key }}</dt>
+                                                                <dd class="text-gray-600 dark:text-gray-300 text-xs">@if(isset($props['old'][$key]))<del class="text-red-500 mr-2">{{ $props["old"][$key] }}</del>@endif <span>{{ $value }}</span></dd>
+                                                            </div>
+                                                        @endforeach
+                                                    </dl>
+                                                @else
+                                                    <pre class="whitespace-pre-wrap text-gray-600 dark:text-gray-300 text-xs">{{ json_encode($activity->properties, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) }}</pre>
+                                                @endif
+                                            </div>
                                         @endif
                                     </div>
-                                @endif
-                            </div>
+                                </div>
+                            </article>
                         @endforeach
                     </div>
 
-                    <div class="mt-4">
+                    <div class="mt-4 flex items-center justify-center">
                         {{ $activities->links() }}
                     </div>
                 @endif
