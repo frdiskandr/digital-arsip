@@ -139,14 +139,16 @@
 
         {{-- Version History Table --}}
         @php
-            $versions = $record->versions;
+            // Use paginated versions passed from the Page class when available.
+            // Fallback to a safe paginated query (5 per page) if not provided.
+            $versions = $versions ?? $record->versions()->orderBy('version', 'desc')->paginate(5);
         @endphp
         <div class="mt-8">
             <h3 class="text-lg font-semibold mb-4 text-gray-900 dark:text-white">
                 Riwayat Versi
             </h3>
 
-            @if ($versions->isEmpty())
+            @if ($versions->count() == 0)
                 <div class="flex flex-col items-center justify-center p-8 text-center bg-white border border-gray-200 rounded-lg dark:bg-gray-800 dark:border-gray-700">
                     <div class="flex items-center justify-center w-12 h-12 mb-4 text-primary-500 bg-primary-50 rounded-full dark:bg-gray-700">
                         <x-heroicon-o-document-duplicate class="w-6 h-6" />
@@ -196,88 +198,80 @@
                         </tbody>
                     </table>
                 </div>
-            @endif
-        </div>
 
-
-        @if (class_exists(\Spatie\Activitylog\Models\Activity::class)) @php
-        $activities = \Spatie\Activitylog\Models\Activity::where('subject_type',
-        \App\Models\Arsip::class) ->where('subject_id', $record->id)
-        ->orderBy('created_at', 'desc') ->get(); @endphp
-
-        <div
-            class="mt-8 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4"
-        >
-            <h3
-                class="text-lg font-semibold mb-4 text-gray-900 dark:text-white"
-            >
-                Riwayat Perubahan
-            </h3>
-            @if ($activities->isEmpty())
-            <div class="text-gray-500 dark:text-gray-300">
-                Belum ada riwayat untuk arsip ini.
-            </div>
-            @else
-            <div class="space-y-4">
-                @foreach ($activities as $activity)
-                <div
-                    class="border rounded-lg p-3 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700"
-                >
-                    <div class="flex justify-between items-center">
-                        <div class="text-sm text-gray-700 dark:text-gray-200">
-                            <strong>{{ $activity->description }}</strong>
-                            @if ($activity->causer) oleh
-                            <span
-                                class="font-medium"
-                                >{{ $activity->causer->name }}</span
-                            >
-                            @endif
-                        </div>
-                        <div class="text-xs text-gray-500 dark:text-gray-400">
-                            {{ $activity->created_at->diffForHumans() }}
-                        </div>
-                    </div>
-
-
-                    @if (!empty($activity->properties) &&
-                    is_array($activity->properties))
-                    <div class="mt-2 text-sm text-gray-600">
-                        @php
-                        $props = $activity->properties;
-                        @endphp
-
-                        @if (isset($props['attributes']) || isset($props['old']))
-                        <table class="w-full text-sm">
-                            <tbody>
-                                @foreach ($props['attributes'] ?? [] as $key =>
-                                $value)
-                                <tr>
-                                    <td class="font-medium text-gray-700 dark:text-gray-300 w-1/3">
-                                        {{ $key }}
-                                    </td>
-                                    <td class="text-gray-600 dark:text-gray-400">
-                                        @if(isset($props['old'][$key]))<del
-                                            class="text-red-500 mr-2"
-                                            >{{ $props["old"][$key] }}</del
-                                        >@endif <span>{{ $value }}</span>
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                        @else
-                        <pre
-                            class="whitespace-pre-wrap text-gray-600 dark:text-gray-300"
-                            >{{ json_encode($activity->properties, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) }}</pre
-                        >
-                        @endif
-                    </div>
-                    @endif
+                <div class="px-4 py-3 bg-white border-t border-gray-100 dark:bg-gray-800 dark:border-gray-700">
+                    {{-- Pagination links (Tailwind) --}}
+                    {{ $versions->links() }}
                 </div>
-                @endforeach
-            </div>
             @endif
         </div>
+
+
+        @if (class_exists(\Spatie\Activitylog\Models\Activity::class))
+            @php
+                // Use paginated activities passed from the Page class when available.
+                // Fallback to a safe paginated query (5 per page) if not provided.
+                $activities = $activities ?? (
+                    class_exists(\Spatie\Activitylog\Models\Activity::class)
+                    ? \Spatie\Activitylog\Models\Activity::where('subject_type', \App\Models\Arsip::class)
+                        ->where('subject_id', $record->id)
+                        ->orderBy('created_at', 'desc')
+                        ->paginate(5)
+                    : null
+                );
+            @endphp
+
+            <div class="mt-8 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                <h3 class="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Riwayat Perubahan</h3>
+
+                @if ($activities->total() == 0)
+                    <div class="text-gray-500 dark:text-gray-300">
+                        Belum ada riwayat untuk arsip ini.
+                    </div>
+                @else
+                    <div class="space-y-4">
+                        @foreach ($activities as $activity)
+                            <div class="border rounded-lg p-3 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700">
+                                <div class="flex justify-between items-center">
+                                    <div class="text-sm text-gray-700 dark:text-gray-200">
+                                        <strong>{{ $activity->description }}</strong>
+                                        @if ($activity->causer) oleh <span class="font-medium">{{ $activity->causer->name }}</span> @endif
+                                    </div>
+                                    <div class="text-xs text-gray-500 dark:text-gray-400">{{ $activity->created_at->diffForHumans() }}</div>
+                                </div>
+
+                                @if (!empty($activity->properties) && is_array($activity->properties))
+                                    <div class="mt-2 text-sm text-gray-600">
+                                        @php $props = $activity->properties; @endphp
+
+                                        @if (isset($props['attributes']) || isset($props['old']))
+                                            <table class="w-full text-sm">
+                                                <tbody>
+                                                    @foreach ($props['attributes'] ?? [] as $key => $value)
+                                                        <tr>
+                                                            <td class="font-medium text-gray-700 dark:text-gray-300 w-1/3">{{ $key }}</td>
+                                                            <td class="text-gray-600 dark:text-gray-400">
+                                                                @if(isset($props['old'][$key]))<del class="text-red-500 mr-2">{{ $props["old"][$key] }}</del>@endif
+                                                                <span>{{ $value }}</span>
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        @else
+                                            <pre class="whitespace-pre-wrap text-gray-600 dark:text-gray-300">{{ json_encode($activity->properties, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) }}</pre>
+                                        @endif
+                                    </div>
+                                @endif
+                            </div>
+                        @endforeach
+                    </div>
+
+                    <div class="mt-4">
+                        {{ $activities->links() }}
+                    </div>
+                @endif
+            </div>
         @endif
     </div>
 </x-filament-panels::page>

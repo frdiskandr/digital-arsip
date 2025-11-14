@@ -51,4 +51,32 @@ class ViewArsip extends ViewRecord
     {
         return parent::getRelationManagers();
     }
+
+    /**
+     * Provide additional view data (paginated versions and activities) so the Blade
+     * view doesn't run heavy queries directly.
+     *
+     * @return array<string, mixed>
+     */
+    protected function getViewData(): array
+    {
+        $record = $this->record;
+
+        // Paginate versions (5 per page)
+        $versions = $record->versions()->orderBy('version', 'desc')->paginate(5);
+
+        // Paginate activities (5 per page) if activity model exists
+        $activities = null;
+        if (class_exists(\Spatie\Activitylog\Models\Activity::class)) {
+            $activities = \Spatie\Activitylog\Models\Activity::where('subject_type', \App\Models\Arsip::class)
+                ->where('subject_id', $record->id)
+                ->orderBy('created_at', 'desc')
+                ->paginate(5);
+        }
+
+        return array_merge(parent::getViewData(), [
+            'versions' => $versions,
+            'activities' => $activities,
+        ]);
+    }
 }
