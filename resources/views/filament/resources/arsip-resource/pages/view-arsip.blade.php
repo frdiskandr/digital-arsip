@@ -36,7 +36,9 @@
                     @endif
                 </div>
             </div>
-            @php $fileUrl = route('arsip.view', ['record' => $record]); $filePath = $record->file_path;
+            @php
+            $fileUrl = route('arsip.view', ['record' => $record]); $filePath = $record->file_path;
+            echo '<script>console.log("Debug filePath:", ' . json_encode($record) . ');</script>';
             @endphp
         </div>
         <p class="text-gray-500 dark:text-gray-300 mb-4">

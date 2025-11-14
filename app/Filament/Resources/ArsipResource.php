@@ -123,8 +123,11 @@ class ArsipResource extends Resource
                 Tables\Columns\BadgeColumn::make('doc_type')
                     ->label('Jenis')
                     ->getStateUsing(function (Arsip $record) {
+                        echo '<script>console.log("Debug record:", ' . json_encode($record) . ');</script>';
                         $name = $record->original_file_name ?: $record->file_path;
                         $ext = $name ? pathinfo($name, PATHINFO_EXTENSION) : null;
+                        $versions = $record->versions()->get();
+                        echo '<script>console.log("Debug versions:", ' . json_encode($versions) . ');</script>';
                         return strtoupper($ext ?: 'FILE');
                     })
                     ->color(fn($state) => match ($state) {

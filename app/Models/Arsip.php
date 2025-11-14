@@ -127,14 +127,22 @@ class Arsip extends Model
     public function setFilePathAttribute($value)
     {
         $this->attributes['file_path'] = $value;
+        // When a file_path is set/changed, update original_file_name.
+        // - Do NOT overwrite original_file_name if file_path wasn't changed (prevents losing
+        //   the stored original name when editing other fields).
+        // - If file_path changed (new upload) or original_file_name is empty, extract the
+        //   original filename from the stored filename and save it.
+        if ($value) {
+            $current = $this->getOriginal('file_path');
 
-        // If original_file_name column exists and not set, try to extract original name
-        if (empty($this->attributes['original_file_name']) && $value) {
-            $fileName = basename($value);
-            if (preg_match('/\\d{4}-\\d{2}-\\d{2}-\\d{6}_[a-f0-9]{32}_(.+)$/', $fileName, $matches)) {
-                $this->attributes['original_file_name'] = $matches[1];
-            } else {
-                $this->attributes['original_file_name'] = $fileName;
+            // Only update original_file_name when file_path changed or when it's missing
+            if ($current !== $value || empty($this->attributes['original_file_name'])) {
+                $fileName = basename($value);
+                if (preg_match('/\\d{4}-\\d{2}-\\d{2}-\\d{6}_[a-f0-9]{32}_(.+)$/', $fileName, $matches)) {
+                    $this->attributes['original_file_name'] = $matches[1];
+                } else {
+                    $this->attributes['original_file_name'] = $fileName;
+                }
             }
         }
     }
