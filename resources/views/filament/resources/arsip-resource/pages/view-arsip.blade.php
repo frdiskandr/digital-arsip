@@ -51,7 +51,7 @@
         Illuminate\Support\Facades\Storage::disk('local')->size($filePath);
         @endphp @if ($filePath &&
         Illuminate\Support\Facades\Storage::disk('local')->exists($filePath))
-        @if (in_array($extension, ['pdf', 'jpg', 'jpeg', 'png', 'gif']))
+        @if ($extension == 'pdf')
         <div
             class="border rounded-lg overflow-hidden mb-4 bg-white dark:bg-gray-900"
         >
@@ -60,6 +60,16 @@
                 class="w-full h-[800px]"
                 frameborder="0"
             ></iframe>
+        </div>
+        @elseif (in_array($extension, ['jpg', 'jpeg', 'png', 'gif']))
+        <div
+            class="flex justify-center items-center border rounded-lg overflow-hidden mb-4 bg-white dark:bg-gray-900 p-4"
+        >
+            <img
+                src="{{ $fileUrl }}"
+                alt="{{ $record->judul }}"
+                class="max-h-[80vh] w-auto object-contain rounded-lg shadow-md"
+            />
         </div>
         @elseif ($extension == 'mp4')
         <div

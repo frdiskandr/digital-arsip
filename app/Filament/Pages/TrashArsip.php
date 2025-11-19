@@ -25,7 +25,7 @@ class TrashArsip extends Page implements HasTable
 {
     use InteractsWithTable;
 
-    protected static ?string $navigationLabel = 'Arsip Terhapus';
+    protected static ?string $navigationLabel = 'Trash Arsip';
     protected static ?string $navigationIcon = 'heroicon-o-trash';
     protected static ?int $navigationSort = 10;
     protected static ?string $navigationGroup = 'Manajemen Arsip';
@@ -116,8 +116,8 @@ class TrashArsip extends Page implements HasTable
                     ->icon('heroicon-o-x-mark')
                     ->color('danger')
                     ->action(function (Arsip $record) {
-                        if ($record->file_path && Storage::disk('public')->exists($record->file_path)) {
-                            Storage::disk('public')->delete($record->file_path);
+                        if ($record->file_path && Storage::disk('local')->exists($record->file_path)) {
+                            Storage::disk('local')->delete($record->file_path);
                         }
                         $record->forceDelete();
                     })
@@ -140,8 +140,8 @@ class TrashArsip extends Page implements HasTable
                     ->color('danger')
                     ->action(function (Collection $records) {
                         $records->each(function (Arsip $record) {
-                            if ($record->file_path && Storage::disk('public')->exists($record->file_path)) {
-                                Storage::disk('public')->delete($record->file_path);
+                            if ($record->file_path && Storage::disk('local')->exists($record->file_path)) {
+                                Storage::disk('local')->delete($record->file_path);
                             }
                             $record->forceDelete();
                         });
