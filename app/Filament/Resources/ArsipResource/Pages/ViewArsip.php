@@ -30,6 +30,10 @@ class ViewArsip extends ViewRecord
                     'filament.resources.arsip-resource.pages.share-modal',
                     ['url' => ArsipResource::getUrl('view', ['record' => $this->record])]
                 ))
+                ->mountUsing(function (Model $record, \App\Services\ArsipStatService $service) {
+                    $service->recordShare($record);
+                    return [];
+                })
 
                 ->modalSubmitAction(false) // Hides the submit button
                 ->modalCancelAction(false), // Hides the cancel button

@@ -9,6 +9,16 @@
                     {{ $record->judul }}
                 </h2>
                 <div class="mt-10 md:mt-2 flex items-center gap-2 ">
+                    {{-- Stats Badges --}}
+                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
+                        <x-heroicon-m-arrow-down-tray class="w-3 h-3" />
+                        {{ $record->download_count }} Unduhan
+                    </span>
+                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
+                        <x-heroicon-m-share class="w-3 h-3" />
+                        {{ $record->share_count }} Dibagikan
+                    </span>
+
                     @php // helper to compute readable text color
                     $computeTextColor = function ($hex) { $hex = ltrim($hex ??
                     '', '#'); if (strlen($hex) === 3) { $hex =
